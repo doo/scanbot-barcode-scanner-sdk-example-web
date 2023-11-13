@@ -5,7 +5,7 @@ import {
 	useSingleBarcodeScan,
 	useScanAndCountScan,
 	useARMultiScan,
-} from "./utils";
+} from './utils';
 
 const SectionList = ({ sections }) => (
 	<div>
@@ -55,40 +55,40 @@ function App() {
 
 	const sectionListData = [
 		{
-			title: "Barcode Scanning Use Cases",
+			title: 'Barcode Scanning Use Cases',
 			data: [
 				{
-					title: "Scan Single Barcodes",
+					title: 'Scan Single Barcodes',
 					scanningFunction: () =>
 						callWithLicense(useSingleBarcodeScan(scanbotSDK)),
 				},
 				{
-					title: "Scanning Multiple Barcodes",
+					title: 'Scanning Multiple Barcodes',
 					scanningFunction: () =>
 						callWithLicense(useMultipleBarcodeScan(scanbotSDK)),
 				},
 				{
-					title: "Scan and Count",
+					title: 'Scan and Count',
 					scanningFunction: () =>
 						callWithLicense(useScanAndCountScan(scanbotSDK)),
 				},
 				{
-					title: "Scanning Tiny Barcodes",
+					title: 'Scanning Tiny Barcodes',
 					scanningFunction: () =>
-						console.log("Scanning Tiny Barcodes"),
+						console.log('Scanning Tiny Barcodes'),
 				},
 			],
 		},
 		{
-			title: "Barcode AR Overlay Use Cases",
+			title: 'Barcode AR Overlay Use Cases',
 			data: [
 				{
-					title: "AR-MultiScan",
+					title: 'AR-MultiScan',
 					scanningFunction: () => useARMultiScan(scanbotSDK),
 				},
 				{
-					title: "AR-SelectScan",
-					scanningFunction: () => console.log("AR-SelectScan"),
+					title: 'AR-SelectScan',
+					scanningFunction: () => console.log('AR-SelectScan'),
 				},
 			],
 		},
@@ -97,8 +97,8 @@ function App() {
 	return (
 		<>
 			<h1>App</h1>
-			<SectionList sections={sectionListData} />
 			<div id='scanner'></div>
+			<SectionList sections={sectionListData} />
 		</>
 	);
 }
