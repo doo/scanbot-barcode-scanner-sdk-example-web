@@ -1,0 +1,71 @@
+@layer base {
+	/* inter-regular - latin */
+	@font-face {
+		font-display: swap;
+		font-family: 'Inter';
+		font-style: normal;
+		font-weight: 400;
+		src: url('../fonts/inter-v12-latin-regular.woff2') format('woff2'), url('../fonts/inter-v12-latin-regular.woff') format('woff');
+	}
+	/* inter-500 - latin */
+	@font-face {
+		font-display: swap;
+		font-family: 'Inter';
+		font-style: normal;
+		font-weight: 500;
+		src: url('../fonts/inter-v12-latin-500.woff2') format('woff2'), url('../fonts/inter-v12-latin-500.woff') format('woff');
+	}
+	/* inter-600 - latin */
+	@font-face {
+		font-display: swap;
+		font-family: 'Inter';
+		font-style: normal;
+		font-weight: 600;
+		src: url('../fonts/inter-v12-latin-600.woff2') format('woff2'), url('../fonts/inter-v12-latin-600.woff') format('woff');
+	}
+	/* inter-700 - latin */
+	@font-face {
+		font-display: swap;
+		font-family: 'Inter';
+		font-style: normal;
+		font-weight: 700;
+		src: url('../fonts/inter-v12-latin-700.woff2') format('woff2'), url('../fonts/inter-v12-latin-700.woff') format('woff');
+	}
+
+	@font-face {
+		font-family: 'Scanbot Icons';
+		font-style: normal;
+		font-weight: 400;
+		src: local('Material Symbols'), local('MaterialSymbolsOutlined'), url('../fonts/MaterialSymbolsOutlined.woff2') format('woff2'), url('../fonts/MaterialSymbolsOutlined.ttf') format('truetype');
+	}
+
+	.scanbot-icons {
+		font-family: 'Scanbot Icons';
+		font-weight: normal;
+		font-style: normal;
+		font-size: 24px; /* Preferred icon size */
+		display: inline-block;
+		line-height: 1;
+		text-transform: none;
+		letter-spacing: normal;
+		word-wrap: normal;
+		white-space: nowrap;
+		direction: ltr;
+		user-select: none;
+
+		/* Support for all WebKit browsers. */
+		-webkit-font-smoothing: antialiased;
+		/* Support for Safari and Chrome. */
+		text-rendering: optimizeLegibility;
+
+		/* Support for Firefox. */
+		-moz-osx-font-smoothing: grayscale;
+
+		/* Support for IE. */
+		font-feature-settings: 'liga';
+	}
+
+	.scanbot-icons.filled {
+		font-variation-settings: 'FILL' 1;
+	}
+}
