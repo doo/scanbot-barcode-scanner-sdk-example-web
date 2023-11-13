@@ -3,10 +3,10 @@ import ScanbotSDK from "scanbot-web-sdk";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import {
-  useMultipleBarcodeScan,
-  useSingleBarcodeScan,
-  useScanAndCountScan,
-  useARMultiScan,
+  multipleBarcodeScan,
+  singleBarcodeScan,
+  scanAndCountScan,
+  multiARScan,
 } from "./utils";
 
 const SectionList = ({ sections }) => (
@@ -62,17 +62,16 @@ function App() {
         {
           title: "Scan Single Barcodes",
           scanningFunction: () =>
-            callWithLicense(useSingleBarcodeScan(scanbotSDK)),
+            callWithLicense(singleBarcodeScan(scanbotSDK)),
         },
         {
           title: "Scanning Multiple Barcodes",
           scanningFunction: () =>
-            callWithLicense(useMultipleBarcodeScan(scanbotSDK)),
+            callWithLicense(multipleBarcodeScan(scanbotSDK)),
         },
         {
           title: "Scan and Count",
-          scanningFunction: () =>
-            callWithLicense(useScanAndCountScan(scanbotSDK)),
+          scanningFunction: () => callWithLicense(scanAndCountScan(scanbotSDK)),
         },
         {
           title: "Scanning Tiny Barcodes",
@@ -85,7 +84,7 @@ function App() {
       data: [
         {
           title: "AR-MultiScan",
-          scanningFunction: () => useARMultiScan(scanbotSDK),
+          scanningFunction: () => multiARScan(scanbotSDK),
         },
         {
           title: "AR-SelectScan",

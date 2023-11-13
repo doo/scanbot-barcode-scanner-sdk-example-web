@@ -1,11 +1,16 @@
-import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
+import { BarcodeResult } from 'scanbot-web-sdk/@types/model/barcode/barcode-result';
 
-export default async function useMultipleBarcodeScan(scanbotSDK) {
+export default async function scanAndCountScan(scanbotSDK) {
 	try {
 		const configuration = {
-			containerId: "scanner",
+			containerId: 'scanner',
 			onBarcodesDetected: (result: BarcodeResult) => {
 				console.log(result);
+				// scanner.dispose();
+			},
+			scanAndCount: {
+				enabled: true,
+				// style: {},
 			},
 		};
 

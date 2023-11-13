@@ -1,11 +1,11 @@
-import useSingleBarcodeScan from "./useSingleBarcodeScan";
-import useMultipleBarcodeScan from "./useMultipleBarcodesScan";
-import useScanAndCountScan from "./useScanAndCountScan";
-import useARMultiScan from "./useARMultiScan";
+import singleBarcodeScan from "./singleBarcodeScan";
+import multipleBarcodeScan from "./multipleBarcodesScan";
+import scanAndCountScan from "./scanAndCountScan";
+import multiARScan from "./multiARScan";
 
 export {
-	useSingleBarcodeScan,
-	useMultipleBarcodeScan,
-	useScanAndCountScan,
-	useARMultiScan,
+  singleBarcodeScan,
+  multipleBarcodeScan,
+  scanAndCountScan,
+  multiARScan,
 };

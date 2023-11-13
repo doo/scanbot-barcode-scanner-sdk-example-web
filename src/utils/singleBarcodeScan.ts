@@ -1,6 +1,6 @@
 import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
 
-export default async function useSingleBarcodeScan(scanbotSDK) {
+export default async function singleBarcodeScan(scanbotSDK) {
 	try {
 		const configuration = {
 			containerId: 'scanner',
