@@ -10,13 +10,13 @@ import {
 } from "./utils";
 
 const SectionList = ({ sections }) => (
-  <div>
+  <div className="container">
     {sections.map((section, index) => (
-      <div key={index}>
-        <h2>{section.title}</h2>
+      <div className="mt-5" key={index}>
+        <h2 className="h4">{section.title}</h2>
         {section.data.map((item, itemIndex) => (
           <div key={itemIndex}>
-            <h3>
+            <h3 className="h4 mt-2">
               <a href="#" onClick={item.scanningFunction}>
                 {item.title}
               </a>
