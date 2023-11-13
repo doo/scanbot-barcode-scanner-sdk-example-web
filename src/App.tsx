@@ -10,7 +10,7 @@ const SectionList = ({ sections }) => (
 				{section.data.map((item, itemIndex) => (
 					<div key={itemIndex}>
 						<h3>
-							<a href='#' onClick={item.onCLick}>
+							<a href='#' onClick={item.scanningFunction}>
 								{item.title}
 							</a>
 						</h3>
@@ -40,6 +40,7 @@ function App() {
 	}, []);
 
 	const callWithLicense = async (scanningFunction) => {
+		console.log('clicked');
 		const licenseInfo = await scanbotSDK.getLicenseInfo();
 
 		licenseInfo.isValid()
@@ -53,24 +54,27 @@ function App() {
 			data: [
 				{
 					title: 'Scan Single Barcodes',
-					onClick: () =>
+					scanningFunction: () =>
 						callWithLicense(singleBarcodeScan(scanbotSDK)),
 				},
 				{
 					title: 'Scanning Multiple Barcodes',
-					onClick: () => console.log('Scanning Multiple Barcodes'),
+					scanningFunction: () =>
+						console.log('Scanning Multiple Barcodes'),
 				},
 				{
 					title: 'Batch Scanning',
-					onClick: () => console.log('Batch Scanning'),
+					scanningFunction: () => console.log('Batch Scanning'),
 				},
 				{
 					title: 'Scanning Tiny Barcodes',
-					onClick: () => console.log('Scanning Tiny Barcodes'),
+					scanningFunction: () =>
+						console.log('Scanning Tiny Barcodes'),
 				},
 				{
 					title: 'Detect Barcode On Image',
-					onClick: () => console.log('Detect Barcode On Image'),
+					scanningFunction: () =>
+						console.log('Detect Barcode On Image'),
 				},
 			],
 		},
@@ -79,11 +83,11 @@ function App() {
 			data: [
 				{
 					title: 'AR-MultiScan',
-					onClick: () => console.log('AR-MultiScan'),
+					scanningFunction: () => console.log('AR-MultiScan'),
 				},
 				{
 					title: 'AR-SelectScan',
-					onClick: () => console.log('AR-SelectScan'),
+					scanningFunction: () => console.log('AR-SelectScan'),
 				},
 			],
 		},
