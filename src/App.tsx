@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
 import ScanbotSDK from 'scanbot-web-sdk';
-import singleBarcodeScan from './utils/singleBarcode';
+import {
+	useMultipleBarcodeScan,
+	useSingleBarcodeScan,
+	useScanAndCountScan,
+	useARMultiScan,
+} from "./utils";
 
 const SectionList = ({ sections }) => (
 	<div>
@@ -50,44 +55,40 @@ function App() {
 
 	const sectionListData = [
 		{
-			title: 'Barcode Scanning Use Cases',
+			title: "Barcode Scanning Use Cases",
 			data: [
 				{
-					title: 'Scan Single Barcodes',
+					title: "Scan Single Barcodes",
 					scanningFunction: () =>
-						callWithLicense(singleBarcodeScan(scanbotSDK)),
+						callWithLicense(useSingleBarcodeScan(scanbotSDK)),
 				},
 				{
-					title: 'Scanning Multiple Barcodes',
+					title: "Scanning Multiple Barcodes",
 					scanningFunction: () =>
-						console.log('Scanning Multiple Barcodes'),
+						callWithLicense(useMultipleBarcodeScan(scanbotSDK)),
 				},
 				{
-					title: 'Batch Scanning',
-					scanningFunction: () => console.log('Batch Scanning'),
+					title: "Scan and Count",
+					scanningFunction: () =>
+						callWithLicense(useScanAndCountScan(scanbotSDK)),
 				},
 				{
-					title: 'Scanning Tiny Barcodes',
+					title: "Scanning Tiny Barcodes",
 					scanningFunction: () =>
-						console.log('Scanning Tiny Barcodes'),
-				},
-				{
-					title: 'Detect Barcode On Image',
-					scanningFunction: () =>
-						console.log('Detect Barcode On Image'),
+						console.log("Scanning Tiny Barcodes"),
 				},
 			],
 		},
 		{
-			title: 'Barcode AR Overlay Use Cases',
+			title: "Barcode AR Overlay Use Cases",
 			data: [
 				{
-					title: 'AR-MultiScan',
-					scanningFunction: () => console.log('AR-MultiScan'),
+					title: "AR-MultiScan",
+					scanningFunction: () => useARMultiScan(scanbotSDK),
 				},
 				{
-					title: 'AR-SelectScan',
-					scanningFunction: () => console.log('AR-SelectScan'),
+					title: "AR-SelectScan",
+					scanningFunction: () => console.log("AR-SelectScan"),
 				},
 			],
 		},
