@@ -105,9 +105,9 @@ function App() {
       ></div>
       <span
         id="close-scanner"
-        className="absolute top-2 right-4 text-white cursor-pointer text-4xl z-30"
+        className="absolute top-2 right-4 text-white cursor-pointer rotate-45 text-4xl z-30"
       >
-        X
+        +
       </span>
       <Banner />
       <Footer />
