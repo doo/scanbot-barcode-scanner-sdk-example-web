@@ -11,6 +11,10 @@ export default async function singleBarcodeScan(scanbotSDK) {
 		};
 	
 		const scanner = await scanbotSDK.createBarcodeScanner(configuration);
+
+		document.getElementById("close-scanner").addEventListener("click", () => {
+      scanner.dispose();
+    });
 	
 		return scanner;
 	} catch (error) {

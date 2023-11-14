@@ -8,6 +8,7 @@ import {
   scanAndCountScan,
   multiARScan,
 } from "./utils";
+import Banner from "./components/Banner";
 
 const SectionList = ({ sections }) => (
   <div className="container">
@@ -16,7 +17,7 @@ const SectionList = ({ sections }) => (
         <h2 className="h4">{section.title}</h2>
         {section.data.map((item, itemIndex) => (
           <div key={itemIndex}>
-            <h3 className="h4 mt-2">
+            <h3 className="text-lg mt-2">
               <a href="#" onClick={item.scanningFunction}>
                 {item.title}
               </a>
@@ -98,7 +99,17 @@ function App() {
     <>
       <Header />
       <SectionList sections={sectionListData} />
-      <div id="scanner"></div>
+      <div
+        id="scanner"
+        className="fixed top-0 bottom-0 left-0 right-0 z-20 empty:static"
+      ></div>
+      <span
+        id="close-scanner"
+        className="absolute top-2 right-4 text-white cursor-pointer text-4xl z-30"
+      >
+        X
+      </span>
+      <Banner />
       <Footer />
     </>
   );
