@@ -10,37 +10,17 @@ import {
 } from "./utils";
 import Banner from "./components/Banner";
 import type { default as ScanbotSDKType } from "scanbot-web-sdk/@types/scanbot-sdk";
+import { type IScannerCommon } from "scanbot-web-sdk/@types/interfaces/i-scanner-common-handle";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-const SectionList = ({
-  sections,
-}: {
-  sections: {
-    title: string;
-    data: { title: string; scanningFunction: () => void }[];
-  }[];
-}) => (
-  <div className="container">
-    {sections.map((section, index) => (
-      <div className="mt-5" key={index}>
-        <h2 className="h4">{section.title}</h2>
-        {section.data.map((item, itemIndex) => (
-          <div key={itemIndex}>
-            <h3 className="text-lg mt-2">
-              <a href="#" onClick={item.scanningFunction}>
-                {item.title}
-              </a>
-            </h3>
-          </div>
-        ))}
-      </div>
-    ))}
-  </div>
-);
+import CloseScannerButton from "./components/CloseScannerButton";
+import SectionList from "./components/SectionList";
 
 function App() {
   const [scanbotSDK, setScanbotSDK] = useState<ScanbotSDKType | null>(null);
+  const [activeScanner, setActiveScanner] = useState<
+    IScannerCommon | undefined
+  >(undefined);
 
   useEffect(() => {
     async function initializeSDK() {
@@ -57,14 +37,19 @@ function App() {
     initializeSDK();
   }, []);
 
-  const callWithLicense = async (scanningFunction: () => void) => {
+  const callWithLicense = async (
+    scanningFunction: () => Promise<IScannerCommon | undefined>
+  ) => {
     const licenseInfo = await scanbotSDK?.getLicenseInfo();
 
-    licenseInfo?.isValid()
-      ? scanningFunction()
-      : alert(
-          "License not valid. Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license."
-        );
+    if (licenseInfo?.isValid()) {
+      const currentScanner = await scanningFunction();
+      setActiveScanner(currentScanner);
+    } else {
+      alert(
+        "License not valid. Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license."
+      );
+    }
   };
 
   const sectionListData = [
@@ -128,12 +113,12 @@ function App() {
         id="scanner"
         className="fixed top-0 bottom-0 left-0 right-0 z-20 empty:static"
       ></div>
-      <span
-        id="close-scanner"
-        className="absolute top-2 right-4 text-white cursor-pointer rotate-45 text-4xl z-30"
-      >
-        +
-      </span>
+      {activeScanner && (
+        <CloseScannerButton
+          scanner={activeScanner}
+          setScanner={() => setActiveScanner(undefined)}
+        />
+      )}
       <Banner />
       <Footer />
     </>

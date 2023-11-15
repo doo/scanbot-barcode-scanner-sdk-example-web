@@ -2,8 +2,11 @@ import type { default as ScanbotSDKType } from "scanbot-web-sdk/@types/scanbot-s
 import { BarcodeScannerConfiguration } from "scanbot-web-sdk/@types/model/configuration/barcode-scanner-configuration";
 import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
 import { toast } from "react-toastify";
+import { IScannerCommon } from "scanbot-web-sdk/@types/interfaces/i-scanner-common-handle";
 
-export default async function scanAndCountScan(scanbotSDK: ScanbotSDKType) {
+export default async function scanAndCountScan(
+  scanbotSDK: ScanbotSDKType | null
+): Promise<IScannerCommon | undefined> {
   try {
     const configuration: BarcodeScannerConfiguration = {
       containerId: "scanner",
