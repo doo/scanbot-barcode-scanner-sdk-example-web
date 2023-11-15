@@ -10,8 +10,12 @@ import {
 } from "./utils";
 import Banner from "./components/Banner";
 import type { default as ScanbotSDKType } from "scanbot-web-sdk/@types/scanbot-sdk";
+<<<<<<< HEAD
 import { type IScannerCommon } from "scanbot-web-sdk/@types/interfaces/i-scanner-common-handle";
 import { ToastContainer } from "react-toastify";
+=======
+import { ToastContainer, toast } from "react-toastify";
+>>>>>>> 1481170 (multiARScan and type fixes to app.tsx)
 import "react-toastify/dist/ReactToastify.css";
 import CloseScannerButton from "./components/CloseScannerButton";
 import SectionList from "./components/SectionList";
@@ -38,6 +42,7 @@ function App() {
   }, []);
 
   const callWithLicense = async (
+<<<<<<< HEAD
     scanningFunction: () => Promise<IScannerCommon | undefined>
   ) => {
     const licenseInfo = await scanbotSDK?.getLicenseInfo();
@@ -50,6 +55,19 @@ function App() {
         "License not valid. Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license."
       );
     }
+=======
+    scanningFunction: (sdk: ScanbotSDKType) => void
+  ) => {
+    const licenseInfo = await scanbotSDK?.getLicenseInfo();
+
+    licenseInfo?.isValid()
+      ? scanbotSDK
+        ? scanningFunction(scanbotSDK)
+        : toast.error("Scanbot SDK not initialized.")
+      : toast.warn(
+          "License not valid. Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license."
+        );
+>>>>>>> 1481170 (multiARScan and type fixes to app.tsx)
   };
 
   const sectionListData = [
@@ -58,8 +76,7 @@ function App() {
       data: [
         {
           title: "Scan Single Barcodes",
-          scanningFunction: () =>
-            callWithLicense(() => singleBarcodeScan(scanbotSDK)),
+          scanningFunction: () => callWithLicense(singleBarcodeScan),
         },
         {
           title: "Scanning Multiple Barcodes",
