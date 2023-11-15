@@ -9,8 +9,16 @@ import {
   multiARScan,
 } from "./utils";
 import Banner from "./components/Banner";
+import type { default as ScanbotSDKType } from "scanbot-web-sdk/@types/scanbot-sdk";
 
-const SectionList = ({ sections }) => (
+const SectionList = ({
+  sections,
+}: {
+  sections: {
+    title: string;
+    data: { title: string; scanningFunction: () => void }[];
+  }[];
+}) => (
   <div className="container">
     {sections.map((section, index) => (
       <div className="mt-5" key={index}>
@@ -30,7 +38,7 @@ const SectionList = ({ sections }) => (
 );
 
 function App() {
-  const [scanbotSDK, setScanbotSDK] = useState<any | null>(null);
+  const [scanbotSDK, setScanbotSDK] = useState<ScanbotSDKType | null>(null);
 
   useEffect(() => {
     async function initializeSDK() {
@@ -47,12 +55,11 @@ function App() {
     initializeSDK();
   }, []);
 
-  const callWithLicense = async (scanningFunction) => {
-    console.log("clicked");
-    const licenseInfo = await scanbotSDK.getLicenseInfo();
+  const callWithLicense = async (scanningFunction: () => void) => {
+    const licenseInfo = await scanbotSDK?.getLicenseInfo();
 
-    licenseInfo.isValid()
-      ? scanningFunction()
+    licenseInfo?.isValid()
+      ? await scanningFunction()
       : alert("License is expired or invalid.");
   };
 
@@ -63,16 +70,17 @@ function App() {
         {
           title: "Scan Single Barcodes",
           scanningFunction: () =>
-            callWithLicense(singleBarcodeScan(scanbotSDK)),
+            callWithLicense(() => singleBarcodeScan(scanbotSDK)),
         },
         {
           title: "Scanning Multiple Barcodes",
           scanningFunction: () =>
-            callWithLicense(multipleBarcodeScan(scanbotSDK)),
+            callWithLicense(() => multipleBarcodeScan(scanbotSDK)),
         },
         {
           title: "Scan and Count",
-          scanningFunction: () => callWithLicense(scanAndCountScan(scanbotSDK)),
+          scanningFunction: () =>
+            callWithLicense(() => scanAndCountScan(scanbotSDK)),
         },
         {
           title: "Scanning Tiny Barcodes",
@@ -85,7 +93,7 @@ function App() {
       data: [
         {
           title: "AR-MultiScan",
-          scanningFunction: () => multiARScan(scanbotSDK),
+          scanningFunction: () => callWithLicense(() => multiARScan(scanbotSDK)),
         },
         {
           title: "AR-SelectScan",
