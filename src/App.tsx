@@ -1,24 +1,20 @@
 import { useState, useEffect } from "react";
 import ScanbotSDK from "scanbot-web-sdk";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
 import {
   multipleBarcodeScan,
   singleBarcodeScan,
   scanAndCountScan,
   multiARScan,
 } from "./utils";
-import Banner from "./components/Banner";
 import type { default as ScanbotSDKType } from "scanbot-web-sdk/@types/scanbot-sdk";
-<<<<<<< HEAD
 import { type IScannerCommon } from "scanbot-web-sdk/@types/interfaces/i-scanner-common-handle";
-import { ToastContainer } from "react-toastify";
-=======
 import { ToastContainer, toast } from "react-toastify";
->>>>>>> 1481170 (multiARScan and type fixes to app.tsx)
 import "react-toastify/dist/ReactToastify.css";
 import CloseScannerButton from "./components/CloseScannerButton";
 import SectionList from "./components/SectionList";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import Banner from "./components/Banner";
 
 function App() {
   const [scanbotSDK, setScanbotSDK] = useState<ScanbotSDKType | null>(null);
@@ -42,32 +38,24 @@ function App() {
   }, []);
 
   const callWithLicense = async (
-<<<<<<< HEAD
-    scanningFunction: () => Promise<IScannerCommon | undefined>
+    scanningFunction: (
+      sdk: ScanbotSDKType
+    ) => Promise<IScannerCommon | undefined>
   ) => {
     const licenseInfo = await scanbotSDK?.getLicenseInfo();
 
     if (licenseInfo?.isValid()) {
-      const currentScanner = await scanningFunction();
-      setActiveScanner(currentScanner);
+      if (scanbotSDK) {
+        const currentScanner = await scanningFunction(scanbotSDK);
+        setActiveScanner(currentScanner);
+      } else {
+        toast.error("Scanbot SDK not initialized.");
+      }
     } else {
-      alert(
-        "License not valid. Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license."
+      toast.warn(
+        "License not valid. Your license is corrupted or expired,§res are disabled. Please restart the app in order to receive one minute valid license."
       );
     }
-=======
-    scanningFunction: (sdk: ScanbotSDKType) => void
-  ) => {
-    const licenseInfo = await scanbotSDK?.getLicenseInfo();
-
-    licenseInfo?.isValid()
-      ? scanbotSDK
-        ? scanningFunction(scanbotSDK)
-        : toast.error("Scanbot SDK not initialized.")
-      : toast.warn(
-          "License not valid. Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license."
-        );
->>>>>>> 1481170 (multiARScan and type fixes to app.tsx)
   };
 
   const sectionListData = [
