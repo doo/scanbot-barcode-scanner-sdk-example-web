@@ -10,6 +10,8 @@ import {
 } from "./utils";
 import Banner from "./components/Banner";
 import type { default as ScanbotSDKType } from "scanbot-web-sdk/@types/scanbot-sdk";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SectionList = ({
   sections,
@@ -47,7 +49,7 @@ function App() {
           licenseKey: "",
         });
         setScanbotSDK(sdkInstance);
-      } catch (error) {
+      } catch (error: unknown) {
         console.error("Failed to initialize Scanbot SDK:", error);
       }
     }
@@ -59,8 +61,10 @@ function App() {
     const licenseInfo = await scanbotSDK?.getLicenseInfo();
 
     licenseInfo?.isValid()
-      ? await scanningFunction()
-      : alert("License is expired or invalid.");
+      ? scanningFunction()
+      : alert(
+          "License not valid. Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license."
+        );
   };
 
   const sectionListData = [
@@ -93,7 +97,8 @@ function App() {
       data: [
         {
           title: "AR-MultiScan",
-          scanningFunction: () => callWithLicense(() => multiARScan(scanbotSDK)),
+          scanningFunction: () =>
+            callWithLicense(() => multiARScan(scanbotSDK)),
         },
         {
           title: "AR-SelectScan",
@@ -106,6 +111,18 @@ function App() {
   return (
     <>
       <Header />
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <SectionList sections={sectionListData} />
       <div
         id="scanner"
