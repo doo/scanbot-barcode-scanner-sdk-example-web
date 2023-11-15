@@ -7,7 +7,7 @@ import {
   multiARScan,
 } from "./utils";
 import type { default as ScanbotSDKType } from "scanbot-web-sdk/@types/scanbot-sdk";
-import { type IScannerCommon } from "scanbot-web-sdk/@types/interfaces/i-scanner-common-handle";
+import { IBarcodeScannerHandle } from "scanbot-web-sdk/@types/interfaces/i-barcode-scanner-handle";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CloseScannerButton from "./components/CloseScannerButton";
@@ -18,9 +18,7 @@ import Banner from "./components/Banner";
 
 function App() {
   const [scanbotSDK, setScanbotSDK] = useState<ScanbotSDKType | null>(null);
-  const [activeScanner, setActiveScanner] = useState<
-    IScannerCommon | undefined
-  >(undefined);
+  const [activeScanner, setActiveScanner] = useState<IBarcodeScannerHandle | undefined>(undefined);
 
   useEffect(() => {
     async function initializeSDK() {
@@ -38,9 +36,7 @@ function App() {
   }, []);
 
   const callWithLicense = async (
-    scanningFunction: (
-      sdk: ScanbotSDKType
-    ) => Promise<IScannerCommon | undefined>
+    scanningFunction: (sdk: ScanbotSDKType) => Promise<IBarcodeScannerHandle>
   ) => {
     const licenseInfo = await scanbotSDK?.getLicenseInfo();
 
@@ -68,13 +64,11 @@ function App() {
         },
         {
           title: "Scanning Multiple Barcodes",
-          scanningFunction: () =>
-            callWithLicense(() => multipleBarcodeScan(scanbotSDK)),
+          scanningFunction: () => callWithLicense(multipleBarcodeScan),
         },
         {
           title: "Scan and Count",
-          scanningFunction: () =>
-            callWithLicense(() => scanAndCountScan(scanbotSDK)),
+          scanningFunction: () => callWithLicense(scanAndCountScan),
         },
         {
           title: "Scanning Tiny Barcodes",
@@ -87,8 +81,7 @@ function App() {
       data: [
         {
           title: "AR-MultiScan",
-          scanningFunction: () =>
-            callWithLicense(() => multiARScan(scanbotSDK)),
+          scanningFunction: () => callWithLicense(multiARScan),
         },
         {
           title: "AR-SelectScan",

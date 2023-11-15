@@ -2,11 +2,11 @@ import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-resu
 import { BarcodeScannerConfiguration } from "scanbot-web-sdk/@types/model/configuration/barcode-scanner-configuration";
 import type { default as ScanbotSDKType } from "scanbot-web-sdk/@types/scanbot-sdk";
 import { toast } from "react-toastify";
-import { IScannerCommon } from "scanbot-web-sdk/@types/interfaces/i-scanner-common-handle";
+import { IBarcodeScannerHandle } from "scanbot-web-sdk/@types/interfaces/i-barcode-scanner-handle";
 
 export default async function singleBarcodeScan(
-  scanbotSDK: ScanbotSDKType | null
-): Promise<IScannerCommon | undefined> {
+  scanbotSDK: ScanbotSDKType
+): Promise<IBarcodeScannerHandle> {
   try {
     const configuration: BarcodeScannerConfiguration = {
       containerId: "scanner",
@@ -33,9 +33,9 @@ export default async function singleBarcodeScan(
     return scanner;
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error(error.message);
+      return Promise.reject(error.message);
     } else {
-      console.error("An unknown error occurred.");
+      return Promise.reject("An unknown error occurred.");
     }
   }
 }
