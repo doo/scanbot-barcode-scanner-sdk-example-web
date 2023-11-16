@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
 import { IBarcodeScannerHandle } from "scanbot-web-sdk/@types/interfaces/i-barcode-scanner-handle";
 
-export default async function multiARScan(
+export default async function selectARScan(
   scanbotSDK: ScanbotSDKType
 ): Promise<IBarcodeScannerHandle> {
   try {
@@ -21,13 +21,13 @@ export default async function multiARScan(
       showFinder: false,
       overlay: {
         visible: true,
-        automaticSelectionEnabled: true,
         onBarcodeFound: (code: Barcode) => {
           toast.info(
             `format: ${code.format}
             text: ${code.text}`
           );
         },
+        // should have something like onBarcodeSelected here
       },
     };
 

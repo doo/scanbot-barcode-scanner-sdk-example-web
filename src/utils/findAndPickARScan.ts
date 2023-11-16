@@ -4,8 +4,12 @@ import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-resu
 import { toast } from "react-toastify";
 import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
 import { IBarcodeScannerHandle } from "scanbot-web-sdk/@types/interfaces/i-barcode-scanner-handle";
+import {
+  IBarcodePolygonHandle,
+  IBarcodePolygonLabelHandle,
+} from "scanbot-web-sdk/@types/model/configuration/selection-overlay-configuration";
 
-export default async function multiARScan(
+export default async function findAndPickARScan(
   scanbotSDK: ScanbotSDKType
 ): Promise<IBarcodeScannerHandle> {
   try {
@@ -21,12 +25,22 @@ export default async function multiARScan(
       showFinder: false,
       overlay: {
         visible: true,
-        automaticSelectionEnabled: true,
-        onBarcodeFound: (code: Barcode) => {
-          toast.info(
-            `format: ${code.format}
-            text: ${code.text}`
-          );
+        onBarcodeFound: (
+          code: Barcode,
+          polygon: IBarcodePolygonHandle,
+          label: IBarcodePolygonLabelHandle
+        ) => {
+          if (code.format === "QR_CODE") {
+            polygon.style({
+              fill: "rgba(0, 255, 0, 0.3)",
+              stroke: "rgba(0, 255, 0, 1)",
+            });
+            label.style({
+              backgroundColor: "rgba(0, 255, 0, 0.9)",
+              textColor: "white",
+            });
+          }
+          toast.info(`format: ${code.format}, text: ${code.text}`);
         },
       },
     };

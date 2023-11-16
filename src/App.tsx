@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import ScanbotSDK from "scanbot-web-sdk";
 import {
-  multipleBarcodeScan,
   singleBarcodeScan,
+  multipleBarcodeScan,
+  batchBarcodeScan,
   scanAndCountScan,
   multiARScan,
+  selectARScan,
+  findAndPickARScan,
 } from "./utils";
 import type { default as ScanbotSDKType } from "scanbot-web-sdk/@types/scanbot-sdk";
 import { IBarcodeScannerHandle } from "scanbot-web-sdk/@types/interfaces/i-barcode-scanner-handle";
@@ -65,16 +68,16 @@ function App() {
           scanningFunction: () => callWithLicense(singleBarcodeScan),
         },
         {
-          title: "Scanning Multiple Barcodes",
+          title: "Scan Multiple Barcodes",
           scanningFunction: () => callWithLicense(multipleBarcodeScan),
+        },
+        {
+          title: "Batch Barcode Scan",
+          scanningFunction: () => callWithLicense(batchBarcodeScan),
         },
         {
           title: "Scan and Count",
           scanningFunction: () => callWithLicense(scanAndCountScan),
-        },
-        {
-          title: "Scanning Tiny Barcodes",
-          scanningFunction: () => console.log("Scanning Tiny Barcodes"),
         },
       ],
     },
@@ -87,7 +90,11 @@ function App() {
         },
         {
           title: "AR-SelectScan",
-          scanningFunction: () => console.log("AR-SelectScan"),
+          scanningFunction: () => callWithLicense(selectARScan),
+        },
+        {
+          title: "AR-SelectScan",
+          scanningFunction: () => callWithLicense(findAndPickARScan),
         },
       ],
     },
