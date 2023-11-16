@@ -97,7 +97,7 @@ function App() {
           scanningFunction: () => callWithLicense(selectARScan),
         },
         {
-          title: "AR-SelectScan",
+          title: "AR-FindAndPickScan",
           scanningFunction: () => callWithLicense(findAndPickARScan),
         },
       ],

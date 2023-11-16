@@ -39,8 +39,8 @@ export default async function findAndPickARScan(
               backgroundColor: "rgba(0, 255, 0, 0.9)",
               textColor: "white",
             });
+			toast.info(`format: ${code.format}, text: ${code.text}`);
           }
-          toast.info(`format: ${code.format}, text: ${code.text}`);
         },
       },
     };
