@@ -18,7 +18,9 @@ import Banner from "./components/Banner";
 
 function App() {
   const [scanbotSDK, setScanbotSDK] = useState<ScanbotSDKType | null>(null);
-  const [activeScanner, setActiveScanner] = useState<IBarcodeScannerHandle | undefined>(undefined);
+  const [activeScanner, setActiveScanner] = useState<
+    IBarcodeScannerHandle | undefined
+  >(undefined);
 
   useEffect(() => {
     async function initializeSDK() {
@@ -38,19 +40,19 @@ function App() {
   const callWithLicense = async (
     scanningFunction: (sdk: ScanbotSDKType) => Promise<IBarcodeScannerHandle>
   ) => {
-    const licenseInfo = await scanbotSDK?.getLicenseInfo();
+    if (scanbotSDK) {
+      const licenseInfo = await scanbotSDK.getLicenseInfo();
 
-    if (licenseInfo?.isValid()) {
-      if (scanbotSDK) {
+      if (licenseInfo.isValid()) {
         const currentScanner = await scanningFunction(scanbotSDK);
         setActiveScanner(currentScanner);
       } else {
-        toast.error("Scanbot SDK not initialized.");
+        toast.warn(
+          "License not valid. Your license is corrupted or expired,§res are disabled. Please restart the app in order to receive one minute valid license."
+        );
       }
     } else {
-      toast.warn(
-        "License not valid. Your license is corrupted or expired,§res are disabled. Please restart the app in order to receive one minute valid license."
-      );
+      toast.error("Scanbot SDK not initialized.");
     }
   };
 
