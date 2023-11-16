@@ -59,6 +59,11 @@ function App() {
     }
   };
 
+  const handleScannerClose = () => {
+	activeScanner?.dispose();
+	setActiveScanner(null);
+  }
+
   const sectionListData = [
     {
       title: "Barcode Scanning Use Cases",
@@ -126,8 +131,7 @@ function App() {
       ></div>
       {activeScanner && (
         <CloseScannerButton
-          scanner={activeScanner}
-          setScanner={() => setActiveScanner(null)}
+          handleScannerClose={handleScannerClose}
         />
       )}
       <Banner />
