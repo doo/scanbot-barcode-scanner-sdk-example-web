@@ -8,6 +8,7 @@ import {
   multiARScan,
   selectARScan,
   findAndPickARScan,
+  detectBarcodeFromImageScan,
 } from "./utils";
 import type { default as ScanbotSDKType } from "scanbot-web-sdk/@types/scanbot-sdk";
 import { IBarcodeScannerHandle } from "scanbot-web-sdk/@types/interfaces/i-barcode-scanner-handle";
@@ -21,9 +22,8 @@ import Banner from "./components/Banner";
 
 function App() {
   const [scanbotSDK, setScanbotSDK] = useState<ScanbotSDKType | null>(null);
-  const [activeScanner, setActiveScanner] = useState<
-    IBarcodeScannerHandle | undefined
-  >(undefined);
+  const [activeScanner, setActiveScanner] =
+    useState<IBarcodeScannerHandle | null>(null);
 
   useEffect(() => {
     async function initializeSDK() {
@@ -51,7 +51,7 @@ function App() {
         setActiveScanner(currentScanner);
       } else {
         toast.warn(
-          "License not valid. Your license is corrupted or expired,§res are disabled. Please restart the app in order to receive one minute valid license."
+          "License not valid. Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license."
         );
       }
     } else {
@@ -78,6 +78,10 @@ function App() {
         {
           title: "Scan and Count",
           scanningFunction: () => callWithLicense(scanAndCountScan),
+        },
+        {
+          title: "Detect Barcode from Image",
+          scanningFunction: () => detectBarcodeFromImageScan(scanbotSDK),
         },
       ],
     },
@@ -123,7 +127,7 @@ function App() {
       {activeScanner && (
         <CloseScannerButton
           scanner={activeScanner}
-          setScanner={() => setActiveScanner(undefined)}
+          setScanner={() => setActiveScanner(null)}
         />
       )}
       <Banner />
