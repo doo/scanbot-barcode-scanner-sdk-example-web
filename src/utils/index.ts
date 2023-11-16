@@ -1,6 +1,7 @@
 import singleBarcodeScan from "./singleBarcodeScan";
 import multipleBarcodeScan from "./multipleBarcodesScan";
 import scanAndCountScan from "./scanAndCountScan";
+import scanAndCountARScan from "./scanAndCountARScan";
 import multiARScan from "./multiARScan";
 import selectARScan from "./selectARScan";
 import batchBarcodeScan from "./batchBarcodeScan";
@@ -15,5 +16,6 @@ export {
   multiARScan,
   selectARScan,
   findAndPickARScan,
-  detectBarcodeFromImageScan
+  detectBarcodeFromImageScan,
+  scanAndCountARScan,
 };
