@@ -1,6 +1,7 @@
 import type { default as ScanbotSDKType } from "scanbot-web-sdk/@types/scanbot-sdk";
 import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
 import { toast } from "react-toastify";
+import toastService from "./toastService";
 
 export default async function detectBarcodeFromImageScan(
   scanbotSDK: ScanbotSDKType | null
@@ -55,7 +56,9 @@ export default async function detectBarcodeFromImageScan(
                   setTimeout(() => toast.dismiss(id), 5000);
                 }
               } catch (error) {
-                toast.error("Error while detecting barcodes: " + error);
+                toastService.showErrorMessage(
+                  "Error while detecting barcodes: " + error
+                );
               }
             };
           }
@@ -63,10 +66,10 @@ export default async function detectBarcodeFromImageScan(
         fileInput.remove();
       }
     } catch (error) {
-      toast.error("Error during image selection: " + error);
+      toastService.showErrorMessage("Error during image selection: " + error);
     }
   } else {
-    toast.warn(
+    toastService.showWarningMessage(
       "License not valid. Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license."
     );
   }

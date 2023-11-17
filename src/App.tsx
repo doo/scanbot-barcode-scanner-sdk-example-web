@@ -12,13 +12,14 @@ import {
 } from "./utils";
 import type { default as ScanbotSDKType } from "scanbot-web-sdk/@types/scanbot-sdk";
 import { IBarcodeScannerHandle } from "scanbot-web-sdk/@types/interfaces/i-barcode-scanner-handle";
-import { ToastContainer, toast } from "react-toastify";
+import toastService from "./utils/toastService";
 import "react-toastify/dist/ReactToastify.css";
 import CloseScannerButton from "./components/CloseScannerButton";
 import SectionList from "./components/SectionList";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Banner from "./components/Banner";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const [scanbotSDK, setScanbotSDK] = useState<ScanbotSDKType | null>(null);
@@ -50,19 +51,21 @@ function App() {
         const currentScanner = await scanningFunction(scanbotSDK);
         setActiveScanner(currentScanner);
       } else {
-        toast.warn(
+        toastService.showWarningMessage(
           "License not valid. Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license."
         );
       }
     } else {
-      toast.error("Scanbot SDK not initialized.");
+      toastService.showErrorMessage("Scanbot SDK not initialized.");
     }
   };
 
   const handleScannerClose = () => {
-	activeScanner?.dispose();
-	setActiveScanner(null);
-  }
+    if (activeScanner) {
+      activeScanner.dispose();
+      setActiveScanner(null);
+    }
+  };
 
   const sectionListData = [
     {
@@ -130,9 +133,7 @@ function App() {
         className="fixed top-0 bottom-0 left-0 right-0 z-20 empty:static"
       ></div>
       {activeScanner && (
-        <CloseScannerButton
-          handleScannerClose={handleScannerClose}
-        />
+        <CloseScannerButton handleScannerClose={handleScannerClose} />
       )}
       <Banner />
       <Footer />

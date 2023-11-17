@@ -1,9 +1,9 @@
 import type { default as ScanbotSDKType } from "scanbot-web-sdk/@types/scanbot-sdk";
 import { BarcodeScannerConfiguration } from "scanbot-web-sdk/@types/model/configuration/barcode-scanner-configuration";
 import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
-import { toast } from "react-toastify";
 import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
 import { IBarcodeScannerHandle } from "scanbot-web-sdk/@types/interfaces/i-barcode-scanner-handle";
+import toastService from "./toastService";
 
 export default async function multiARScan(
   scanbotSDK: ScanbotSDKType
@@ -23,10 +23,7 @@ export default async function multiARScan(
         visible: true,
         automaticSelectionEnabled: true,
         onBarcodeFound: (code: Barcode) => {
-          toast.info(
-            `format: ${code.format}
-            text: ${code.text}`
-          );
+          toastService.showBarcodeInfo(code);
         },
       },
     };

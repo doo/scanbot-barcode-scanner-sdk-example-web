@@ -1,8 +1,8 @@
 import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
 import { BarcodeScannerConfiguration } from "scanbot-web-sdk/@types/model/configuration/barcode-scanner-configuration";
 import type { default as ScanbotSDKType } from "scanbot-web-sdk/@types/scanbot-sdk";
-import { toast } from "react-toastify";
 import { IBarcodeScannerHandle } from "scanbot-web-sdk/@types/interfaces/i-barcode-scanner-handle";
+import toastService from "./toastService";
 
 export default async function singleBarcodeScan(
   scanbotSDK: ScanbotSDKType
@@ -11,16 +11,8 @@ export default async function singleBarcodeScan(
     const configuration: BarcodeScannerConfiguration = {
       containerId: "scanner",
       onBarcodesDetected: (result: BarcodeResult) => {
-        toast.info(
-          `format: ${result.barcodes[0].format}
-          text: ${result.barcodes[0].text}`,
-          {
-            autoClose: 5000,
-          }
-        );
-        toast.onChange(
-          (toast) => toast.status === "removed" && scanner?.dispose()
-        );
+        toastService.showResultInfo(result);
+		scanner.dispose();
       },
       onError: (e: Error) => {
         console.log(e.name + ": " + e.message);
