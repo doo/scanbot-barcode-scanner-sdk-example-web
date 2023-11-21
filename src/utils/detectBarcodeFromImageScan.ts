@@ -1,18 +1,12 @@
-import type { default as ScanbotSDKType } from "scanbot-web-sdk/@types/scanbot-sdk";
 import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
-import { toast } from "react-toastify";
 import toastService from "./toastService";
+import { scannerService } from "../utils/scannerService";
 
-export default async function detectBarcodeFromImageScan(
-  scanbotSDK: ScanbotSDKType | null
-) {
-  if (!scanbotSDK) {
-    throw new Error("Scanbot SDK not initialized yet.");
-  }
+export default async function detectBarcodeFromImageScan() {
+  const licenseInfo = await scannerService.getLicenseInfo();
+  const scanbotSDK = scannerService.getScanbotSDK();
 
-  const licenseInfo = await scanbotSDK.getLicenseInfo();
-
-  if (licenseInfo.isValid()) {
+  if (scanbotSDK && licenseInfo.isValid()) {
     const fileInput: HTMLInputElement = document.createElement("input");
     fileInput.type = "file";
     fileInput.id = "file-input";
@@ -35,28 +29,24 @@ export default async function detectBarcodeFromImageScan(
 
             reader.onload = async () => {
               try {
-                const id = toast.loading("Detecting barcodes...");
+                const id = toastService.showLoadingToast(
+                  "Detecting barcodes..."
+                );
                 const result: BarcodeResult = await scanbotSDK.detectBarcodes(
                   reader.result as string
                 );
 
                 if (result.barcodes.length === 0) {
-                  toast.update(id, {
-                    render: "No barcodes detected.",
-                    type: "info",
-                    isLoading: false,
-                  });
-                  setTimeout(() => toast.dismiss(id), 5000);
+                  toastService.updateToast(id, "No barcodes detected.", "info");
                 } else {
-                  toast.update(id, {
-                    render: `${result.barcodes.length} barcodes were detected in your image.`,
-                    type: "success",
-                    isLoading: false,
-                  });
-                  setTimeout(() => toast.dismiss(id), 5000);
+                  toastService.updateToast(
+                    id,
+                    `${result.barcodes.length} barcodes were detected in your image.`,
+                    "success"
+                  );
                 }
               } catch (error) {
-                toastService.showErrorMessage(
+                toastService.showErrorToast(
                   "Error while detecting barcodes: " + error
                 );
               }
@@ -66,10 +56,10 @@ export default async function detectBarcodeFromImageScan(
         fileInput.remove();
       }
     } catch (error) {
-      toastService.showErrorMessage("Error during image selection: " + error);
+      toastService.showErrorToast("Error during image selection: " + error);
     }
   } else {
-    toastService.showWarningMessage(
+    toastService.showWarningToast(
       "License not valid. Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license."
     );
   }

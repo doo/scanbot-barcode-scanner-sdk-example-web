@@ -3,7 +3,14 @@ import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-resu
 import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
 
 const toastService = {
-  showResultInfo(result: BarcodeResult) {
+  showToast(message: string, type: "info" | "success" | "error" | "warning") {
+    toast(message, {
+      type,
+      autoClose: 5000,
+    });
+  },
+
+  showResultInfoToast(result: BarcodeResult) {
     toast.info(
       `format: ${result.barcodes[0].format}
           text: ${result.barcodes[0].text}`,
@@ -13,7 +20,7 @@ const toastService = {
     );
   },
 
-  showBarcodeInfo(code: Barcode) {
+  showBarcodeInfoToast(code: Barcode) {
     toast.info(
       `format: ${code.format}
 		  text: ${code.text}`,
@@ -23,15 +30,33 @@ const toastService = {
     );
   },
 
-  showErrorMessage(message: string) {
+  showErrorToast(message: string) {
     toast.error(message, {
       autoClose: 5000,
     });
   },
 
-  showWarningMessage(message: string) {
+  showWarningToast(message: string) {
     toast.warn(message, {
       autoClose: 5000,
+    });
+  },
+
+  showLoadingToast(id: string | number, message = "Loading...") {
+    return toast.loading(message, { toastId: id });
+  },
+
+  updateToast(
+    id: string | number,
+    message: string,
+    type: "info" | "success" | "error" | "warning",
+    autoClose: number = 5000
+  ) {
+    toast.update(id, {
+      render: message,
+      type,
+      autoClose,
+      isLoading: false,
     });
   },
 };

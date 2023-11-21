@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import type { default as ScanbotSDKType } from "scanbot-web-sdk/@types/scanbot-sdk";
 import { IBarcodeScannerHandle } from "scanbot-web-sdk/@types/interfaces/i-barcode-scanner-handle";
 import { BarcodeScannerConfiguration } from "scanbot-web-sdk/@types/model/configuration/barcode-scanner-configuration";
 import { scannerService } from "./utils/scannerService";
@@ -21,9 +20,9 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Banner from "./components/Banner";
 import ScannerContainer from "./components/ScannerContainer";
+import toastService from "./utils/toastService";
 
 function App() {
-  const [scanbotSDK, setScanbotSDK] = useState<ScanbotSDKType | null>(null); // to remove?
   const [activeScanner, setActiveScanner] =
     useState<IBarcodeScannerHandle | null>(null);
 
@@ -42,12 +41,18 @@ function App() {
   const handleCreateBarcodeScanner = async (
     configuration: BarcodeScannerConfiguration
   ) => {
-    try {
-      await scannerService.createBarcodeScanner(configuration);
-      setActiveScanner(scannerService.getScanner());
-    } catch (error) {
-      console.error("Error creating barcode scanner", error);
-      return Promise.reject(`Error creating barcode scanner: ${error}`);
+    const licenseInfo = await scannerService.getLicenseInfo();
+    if (licenseInfo.isValid()) {
+      try {
+        await scannerService.createBarcodeScanner(configuration);
+        setActiveScanner(scannerService.getScanner());
+      } catch (error) {
+        console.error("Error creating barcode scanner", error);
+        return Promise.reject(`Error creating barcode scanner: ${error}`);
+      }
+    } else {
+      console.error("License is not valid");
+      toastService.showErrorToast("License is not valid");
     }
   };
 
@@ -81,8 +86,7 @@ function App() {
         },
         {
           title: "Detect Barcode from Image",
-          scanningFunction: () =>
-            detectBarcodeFromImageScan(scannerService.getScanbotSDK()),
+          scanningFunction: () => detectBarcodeFromImageScan(),
         },
       ],
     },

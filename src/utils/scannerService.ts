@@ -36,7 +36,7 @@ class ScannerService {
     configuration: BarcodeScannerConfiguration
   ): Promise<IBarcodeScannerHandle> {
     if (!this.scanbotSDK) {
-      toastService.showErrorMessage("Scanbot SDK not initialized.");
+      toastService.showErrorToast("Scanbot SDK not initialized.");
       return Promise.reject("Scanbot SDK not initialized.");
     }
 
@@ -47,6 +47,21 @@ class ScannerService {
     } catch (error) {
       console.error("Failed to create Barcode Scanner:", error);
       return Promise.reject(`Failed to create Barcode Scanner: ${error}`);
+    }
+  }
+
+  async getLicenseInfo() {
+    if (!this.scanbotSDK) {
+      toastService.showErrorToast("Scanbot SDK not initialized.");
+      return Promise.reject("Scanbot SDK not initialized.");
+    }
+
+    try {
+      const licenseInfo = await this.scanbotSDK.getLicenseInfo();
+      return licenseInfo;
+    } catch (error) {
+      console.error("Failed to get license info:", error);
+      return Promise.reject(`Failed to get license info: ${error}`);
     }
   }
 }

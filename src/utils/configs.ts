@@ -16,12 +16,12 @@ const onError = (e: Error) => {
 
 // edit default handler for when a barcode is detected
 const onBarcodesDetected = (result: BarcodeResult) => {
-  toastService.showResultInfo(result);
+  toastService.showResultInfoToast(result);
 };
 
 // edit default handler for when a barcode is found with the AR overlay
 const onBarcodeFound = (code: Barcode) => {
-  toastService.showBarcodeInfo(code);
+  toastService.showBarcodeInfoToast(code);
 };
 
 // base configuration for all barcode scanner examples
@@ -34,7 +34,7 @@ const baseConfig: BarcodeScannerConfiguration = {
 export const singleConfig = {
   ...baseConfig,
   onBarcodesDetected: (result: BarcodeResult) => {
-    toastService.showResultInfo(result);
+    toastService.showResultInfoToast(result);
     scannerService.dispose();
   },
 };
@@ -97,7 +97,7 @@ export const findAndPickARConfig = {
           backgroundColor: "rgba(0, 255, 0, 0.9)",
           textColor: "white",
         });
-        toastService.showBarcodeInfo(code);
+        toastService.showBarcodeInfoToast(code);
       }
     },
   },
