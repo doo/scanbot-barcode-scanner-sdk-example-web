@@ -1,68 +1,59 @@
 import { useState, useEffect } from "react";
-import ScanbotSDK from "scanbot-web-sdk";
-import {
-  singleBarcodeScan,
-  multipleBarcodeScan,
-  batchBarcodeScan,
-  scanAndCountScan,
-  multiARScan,
-  selectARScan,
-  findAndPickARScan,
-  detectBarcodeFromImageScan,
-} from "./utils";
 import type { default as ScanbotSDKType } from "scanbot-web-sdk/@types/scanbot-sdk";
 import { IBarcodeScannerHandle } from "scanbot-web-sdk/@types/interfaces/i-barcode-scanner-handle";
-import toastService from "./utils/toastService";
+import { BarcodeScannerConfiguration } from "scanbot-web-sdk/@types/model/configuration/barcode-scanner-configuration";
+import { scannerService } from "./utils/scannerService";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  singleConfig,
+  multipleConfig,
+  multipleARConfig,
+  batchConfig,
+  scanAndCountConfig,
+  selectARConfig,
+  findAndPickARConfig,
+} from "./utils/configs";
+import detectBarcodeFromImageScan from "./utils/detectBarcodeFromImageScan";
 import CloseScannerButton from "./components/CloseScannerButton";
 import SectionList from "./components/SectionList";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Banner from "./components/Banner";
-import { ToastContainer } from "react-toastify";
+import ScannerContainer from "./components/ScannerContainer";
 
 function App() {
-  const [scanbotSDK, setScanbotSDK] = useState<ScanbotSDKType | null>(null);
+  const [scanbotSDK, setScanbotSDK] = useState<ScanbotSDKType | null>(null); // to remove?
   const [activeScanner, setActiveScanner] =
     useState<IBarcodeScannerHandle | null>(null);
 
   useEffect(() => {
-    async function initializeSDK() {
-      try {
-        const sdkInstance = await ScanbotSDK.initialize({
-          licenseKey: "",
-        });
-        setScanbotSDK(sdkInstance);
-      } catch (error: unknown) {
-        console.error("Failed to initialize Scanbot SDK:", error);
-      }
-    }
+    const scanbotOptions = {
+      licenseKey: "",
+    };
 
-    initializeSDK();
+    scannerService.initialize(scanbotOptions);
+
+    return () => {
+      scannerService.dispose();
+    };
   }, []);
 
-  const callWithLicense = async (
-    scanningFunction: (sdk: ScanbotSDKType) => Promise<IBarcodeScannerHandle>
+  const handleCreateBarcodeScanner = async (
+    configuration: BarcodeScannerConfiguration
   ) => {
-    if (scanbotSDK) {
-      const licenseInfo = await scanbotSDK.getLicenseInfo();
-
-      if (licenseInfo.isValid()) {
-        const currentScanner = await scanningFunction(scanbotSDK);
-        setActiveScanner(currentScanner);
-      } else {
-        toastService.showWarningMessage(
-          "License not valid. Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license."
-        );
-      }
-    } else {
-      toastService.showErrorMessage("Scanbot SDK not initialized.");
+    try {
+      await scannerService.createBarcodeScanner(configuration);
+      setActiveScanner(scannerService.getScanner());
+    } catch (error) {
+      console.error("Error creating barcode scanner", error);
+      return Promise.reject(`Error creating barcode scanner: ${error}`);
     }
   };
 
   const handleScannerClose = () => {
     if (activeScanner) {
-      activeScanner.dispose();
+      scannerService.dispose();
       setActiveScanner(null);
     }
   };
@@ -73,23 +64,25 @@ function App() {
       data: [
         {
           title: "Scan Single Barcodes",
-          scanningFunction: () => callWithLicense(singleBarcodeScan),
+          scanningFunction: () => handleCreateBarcodeScanner(singleConfig),
         },
         {
           title: "Scan Multiple Barcodes",
-          scanningFunction: () => callWithLicense(multipleBarcodeScan),
+          scanningFunction: () => handleCreateBarcodeScanner(multipleConfig),
         },
         {
           title: "Batch Barcode Scan",
-          scanningFunction: () => callWithLicense(batchBarcodeScan),
+          scanningFunction: () => handleCreateBarcodeScanner(batchConfig),
         },
         {
           title: "Scan and Count",
-          scanningFunction: () => callWithLicense(scanAndCountScan),
+          scanningFunction: () =>
+            handleCreateBarcodeScanner(scanAndCountConfig),
         },
         {
           title: "Detect Barcode from Image",
-          scanningFunction: () => detectBarcodeFromImageScan(scanbotSDK),
+          scanningFunction: () =>
+            detectBarcodeFromImageScan(scannerService.getScanbotSDK()),
         },
       ],
     },
@@ -98,15 +91,16 @@ function App() {
       data: [
         {
           title: "AR-MultiScan",
-          scanningFunction: () => callWithLicense(multiARScan),
+          scanningFunction: () => handleCreateBarcodeScanner(multipleARConfig),
         },
         {
           title: "AR-SelectScan",
-          scanningFunction: () => callWithLicense(selectARScan),
+          scanningFunction: () => handleCreateBarcodeScanner(selectARConfig),
         },
         {
           title: "AR-FindAndPickScan",
-          scanningFunction: () => callWithLicense(findAndPickARScan),
+          scanningFunction: () =>
+            handleCreateBarcodeScanner(findAndPickARConfig),
         },
       ],
     },
@@ -128,11 +122,11 @@ function App() {
         theme="light"
       />
       <SectionList sections={sectionListData} />
-      <div
+      <ScannerContainer
         id="scanner"
         className="fixed top-0 bottom-0 left-0 right-0 z-20 empty:static"
-      ></div>
-      {activeScanner && (
+      />
+      {scannerService.getScanner() && (
         <CloseScannerButton handleScannerClose={handleScannerClose} />
       )}
       <Banner />
