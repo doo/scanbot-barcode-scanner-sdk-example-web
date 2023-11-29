@@ -19,12 +19,12 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Banner from "./components/Banner";
 import ScannerContainer from "./components/ScannerContainer";
+import CloseScannerButton from "./components/CloseScannerButton";
 import toastService from "./services/toastService";
 
 function App() {
   const [activeScanner, setActiveScanner] =
     useState<IBarcodeScannerHandle | null>(null);
-  const [overlayState, setOverlayState] = useState(false);
 
   useEffect(() => {
     const scanbotOptions = {
@@ -44,7 +44,6 @@ function App() {
     const licenseInfo = await scannerService.getLicenseInfo();
     if (licenseInfo.isValid()) {
       try {
-        setOverlayState(true);
         await scannerService.createBarcodeScanner(configuration);
         setActiveScanner(scannerService.getScanner());
       } catch (error) {
@@ -61,7 +60,6 @@ function App() {
     if (activeScanner) {
       scannerService.dispose();
       setActiveScanner(null);
-      setOverlayState(false);
     }
   };
 
@@ -117,20 +115,23 @@ function App() {
       <Header />
       <ToastContainer
         position="bottom-center"
-        hideProgressBar={false}
+        autoClose={false}
         newestOnTop
+        closeOnClick={false}
         rtl={false}
         pauseOnFocusLoss
-        draggable
-        pauseOnHover
+        draggable={false}
         theme="light"
       />
       <SectionList sections={sectionListData} />
       <ScannerContainer
-        overlayState={overlayState}
-        activeScanner={activeScanner}
-        handleScannerClose={handleScannerClose}
-      />
+        id="scanner"
+        className="fixed top-0 bottom-0 left-0 right-0 z-20 empty:static"
+      >
+        {scannerService.getScanner() && (
+          <CloseScannerButton handleScannerClose={handleScannerClose} />
+        )}
+      </ScannerContainer>
       <Banner />
       <Footer />
     </>
