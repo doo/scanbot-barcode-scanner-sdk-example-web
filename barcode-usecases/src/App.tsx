@@ -122,14 +122,14 @@ function App() {
         pauseOnFocusLoss
         draggable={false}
         theme="light"
-		className={"max-h-[30%] md:max-h-[500px] md:w-[500px] overflow-auto"}
+        className={"max-h-[30%] md:max-h-[500px] md:w-[500px] overflow-auto"}
       />
       <SectionList sections={sectionListData} />
       <ScannerContainer
         id="scanner"
         className="fixed top-0 bottom-0 left-0 right-0 z-20 empty:static"
       >
-        {scannerService.getScanner() && (
+        {activeScanner && (
           <CloseScannerButton handleScannerClose={handleScannerClose} />
         )}
       </ScannerContainer>

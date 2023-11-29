@@ -6,12 +6,15 @@ const singleBarcodeScan = {
   containerId: "scanner",
   returnBarcodeImage: true,
   onBarcodesDetected: (result: BarcodeResult) => {
-    toastService.showResultInfoToast(result);
     scannerService.pause();
+    toastService.showResultInfoToast(result, {});
   },
-  onError: (error: Error) => {
-    console.log(error);
+  onError: (e: Error) => {
+    console.log(e.name + ": " + e.message);
+    alert(e.name + ": " + e.message);
   },
 };
+
+toastService.resumeDetectionAfterRemoval(); // resume detection after toast removal
 
 export default singleBarcodeScan;

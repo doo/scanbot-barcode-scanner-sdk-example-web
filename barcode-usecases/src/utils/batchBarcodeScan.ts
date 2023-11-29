@@ -1,12 +1,14 @@
 import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
+import toastService from "../services/toastService";
 
 const batchBarcodeScan = {
   containerId: "scanner",
   onBarcodesDetected: (result: BarcodeResult) => {
-    console.log(result);
+    toastService.showResultInfoToast(result);
   },
-  onError: (error: Error) => {
-    console.log(error);
+  onError: (e: Error) => {
+    console.log(e.name + ": " + e.message);
+    alert(e.name + ": " + e.message);
   },
 };
 

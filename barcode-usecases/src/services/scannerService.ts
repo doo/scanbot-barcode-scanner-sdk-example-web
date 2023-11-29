@@ -21,11 +21,15 @@ class ScannerService {
   }
 
   pause() {
-	this.scanner?.pauseDetection();
+    this.scanner?.pauseDetection();
   }
 
   dispose() {
     this.scanner?.dispose();
+  }
+
+  resume() {
+    this.scanner?.resumeDetection();
   }
 
   getScanbotSDK() {

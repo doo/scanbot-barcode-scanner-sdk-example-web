@@ -2,6 +2,8 @@ import { toast } from "react-toastify";
 import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
 import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
 import BarcodeResultToast from "../components/BarcodeResultMessage";
+import { ToastOptions } from "react-toastify";
+import { scannerService } from "./scannerService";
 
 const toastService = {
   showToast(message: string, type: "info" | "success" | "error" | "warning") {
@@ -11,11 +13,8 @@ const toastService = {
     });
   },
 
-  showResultInfoToast(result: BarcodeResult) {
-    toast.info(<BarcodeResultToast barcode={result} />, {
-      autoClose: false,
-      icon: false,
-    });
+  showResultInfoToast(result: BarcodeResult, config?: ToastOptions) {
+    toast.info(<BarcodeResultToast barcode={result} />, { config });
   },
 
   showBarcodeInfoToast(code: Barcode) {
@@ -42,6 +41,14 @@ const toastService = {
 
   showLoadingToast(id: string | number, message = "Loading...") {
     return toast.loading(message, { toastId: id });
+  },
+
+  resumeDetectionAfterRemoval() {
+    toast.onChange((payload) => {
+      if (payload.status === "removed") {
+        scannerService.resume();
+      }
+    });
   },
 
   updateToast(
