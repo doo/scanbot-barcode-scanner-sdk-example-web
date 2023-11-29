@@ -122,6 +122,7 @@ function App() {
         pauseOnFocusLoss
         draggable={false}
         theme="light"
+		className={"max-h-[30%] md:max-h-[500px] md:w-[500px] overflow-auto"}
       />
       <SectionList sections={sectionListData} />
       <ScannerContainer

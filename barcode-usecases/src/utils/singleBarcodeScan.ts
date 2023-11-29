@@ -4,20 +4,13 @@ import { scannerService } from "../services/scannerService";
 
 const singleBarcodeScan = {
   containerId: "scanner",
-  style: {
-	window: {
-        aspectRatio: 1,
-        widthProportion: 0.4,
-    },
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
-  },
+  returnBarcodeImage: true,
   onBarcodesDetected: (result: BarcodeResult) => {
-	console.log(result);
-	toastService.showResultInfoToast(result);
-	scannerService.pause();
+    toastService.showResultInfoToast(result);
+    scannerService.pause();
   },
   onError: (error: Error) => {
-	console.log(error);
+    console.log(error);
   },
 };
 

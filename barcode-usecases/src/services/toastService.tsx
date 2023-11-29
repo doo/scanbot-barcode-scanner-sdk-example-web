@@ -1,6 +1,7 @@
 import { toast } from "react-toastify";
 import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
 import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
+import BarcodeResultToast from "../components/BarcodeResultMessage";
 
 const toastService = {
   showToast(message: string, type: "info" | "success" | "error" | "warning") {
@@ -11,13 +12,10 @@ const toastService = {
   },
 
   showResultInfoToast(result: BarcodeResult) {
-    toast.info(
-      `format: ${result.barcodes[0].format}
-          text: ${result.barcodes[0].text}`,
-      {
-        autoClose: 5000,
-      }
-    );
+    toast.info(<BarcodeResultToast barcode={result} />, {
+      autoClose: false,
+      icon: false,
+    });
   },
 
   showBarcodeInfoToast(code: Barcode) {
