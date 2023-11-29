@@ -1,8 +1,8 @@
 import { BarcodeScannerConfiguration } from "scanbot-web-sdk/@types/model/configuration/barcode-scanner-configuration";
 import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
 import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
-import toastService from "./toastService";
-import { scannerService } from "./scannerService";
+import toastService from "../services/toastService";
+import { scannerService } from "../services/scannerService";
 import {
   IBarcodePolygonHandle,
   IBarcodePolygonLabelHandle,

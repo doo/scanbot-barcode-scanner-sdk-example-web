@@ -1,30 +1,30 @@
 import { useState, useEffect } from "react";
 import { IBarcodeScannerHandle } from "scanbot-web-sdk/@types/interfaces/i-barcode-scanner-handle";
 import { BarcodeScannerConfiguration } from "scanbot-web-sdk/@types/model/configuration/barcode-scanner-configuration";
-import { scannerService } from "./utils/scannerService";
+import { scannerService } from "./services/scannerService";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
-  singleConfig,
-  multipleConfig,
-  multipleARConfig,
-  batchConfig,
-  scanAndCountConfig,
-  selectARConfig,
-  findAndPickARConfig,
-} from "./utils/configs";
+  singleBarcodeScan,
+  multipleBarcodeScan,
+  multiARScan,
+  batchBarcodeScan,
+  scanAndCountARScan,
+  selectARScan,
+  findAndPickARScan,
+} from "./utils/index";
 import detectBarcodeFromImageScan from "./utils/detectBarcodeFromImageScan";
-import CloseScannerButton from "./components/CloseScannerButton";
 import SectionList from "./components/SectionList";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Banner from "./components/Banner";
 import ScannerContainer from "./components/ScannerContainer";
-import toastService from "./utils/toastService";
+import toastService from "./services/toastService";
 
 function App() {
   const [activeScanner, setActiveScanner] =
     useState<IBarcodeScannerHandle | null>(null);
+  const [overlayState, setOverlayState] = useState(false);
 
   useEffect(() => {
     const scanbotOptions = {
@@ -44,6 +44,7 @@ function App() {
     const licenseInfo = await scannerService.getLicenseInfo();
     if (licenseInfo.isValid()) {
       try {
+        setOverlayState(true);
         await scannerService.createBarcodeScanner(configuration);
         setActiveScanner(scannerService.getScanner());
       } catch (error) {
@@ -60,6 +61,7 @@ function App() {
     if (activeScanner) {
       scannerService.dispose();
       setActiveScanner(null);
+      setOverlayState(false);
     }
   };
 
@@ -69,20 +71,16 @@ function App() {
       data: [
         {
           title: "Scan Single Barcodes",
-          scanningFunction: () => handleCreateBarcodeScanner(singleConfig),
+          scanningFunction: () => handleCreateBarcodeScanner(singleBarcodeScan),
         },
         {
           title: "Scan Multiple Barcodes",
-          scanningFunction: () => handleCreateBarcodeScanner(multipleConfig),
+          scanningFunction: () =>
+            handleCreateBarcodeScanner(multipleBarcodeScan),
         },
         {
           title: "Batch Barcode Scan",
-          scanningFunction: () => handleCreateBarcodeScanner(batchConfig),
-        },
-        {
-          title: "Scan and Count",
-          scanningFunction: () =>
-            handleCreateBarcodeScanner(scanAndCountConfig),
+          scanningFunction: () => handleCreateBarcodeScanner(batchBarcodeScan),
         },
         {
           title: "Detect Barcode from Image",
@@ -95,16 +93,20 @@ function App() {
       data: [
         {
           title: "AR-MultiScan",
-          scanningFunction: () => handleCreateBarcodeScanner(multipleARConfig),
+          scanningFunction: () => handleCreateBarcodeScanner(multiARScan),
         },
         {
           title: "AR-SelectScan",
-          scanningFunction: () => handleCreateBarcodeScanner(selectARConfig),
+          scanningFunction: () => handleCreateBarcodeScanner(selectARScan),
         },
         {
           title: "AR-FindAndPickScan",
+          scanningFunction: () => handleCreateBarcodeScanner(findAndPickARScan),
+        },
+        {
+          title: "AR-Scan and Count",
           scanningFunction: () =>
-            handleCreateBarcodeScanner(findAndPickARConfig),
+            handleCreateBarcodeScanner(scanAndCountARScan),
         },
       ],
     },
@@ -114,11 +116,9 @@ function App() {
     <>
       <Header />
       <ToastContainer
-        position="top-center"
-        autoClose={3000}
+        position="bottom-center"
         hideProgressBar={false}
         newestOnTop
-        closeOnClick
         rtl={false}
         pauseOnFocusLoss
         draggable
@@ -127,12 +127,10 @@ function App() {
       />
       <SectionList sections={sectionListData} />
       <ScannerContainer
-        id="scanner"
-        className="fixed top-0 bottom-0 left-0 right-0 z-20 empty:static"
+        overlayState={overlayState}
+        activeScanner={activeScanner}
+        handleScannerClose={handleScannerClose}
       />
-      {scannerService.getScanner() && (
-        <CloseScannerButton handleScannerClose={handleScannerClose} />
-      )}
       <Banner />
       <Footer />
     </>

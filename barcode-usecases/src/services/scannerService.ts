@@ -20,6 +20,10 @@ class ScannerService {
     }
   }
 
+  pause() {
+	this.scanner?.pauseDetection();
+  }
+
   dispose() {
     this.scanner?.dispose();
   }

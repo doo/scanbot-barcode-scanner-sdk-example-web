@@ -1,6 +1,6 @@
 import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
-import toastService from "./toastService";
-import { scannerService } from "../utils/scannerService";
+import toastService from "../services/toastService";
+import { scannerService } from "../services/scannerService";
 
 export default async function detectBarcodeFromImageScan() {
   const licenseInfo = await scannerService.getLicenseInfo();
