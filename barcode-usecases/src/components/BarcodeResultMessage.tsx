@@ -1,14 +1,18 @@
-import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
+import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
 
-const BarcodeResultToast = ({ barcode }: { barcode: BarcodeResult }) => {
-  const imageArray = barcode.barcodes[0].barcodeImage;
-  const image = new Blob([imageArray], { type: "image/jpeg" });
+const BarcodeResultToast = ({ barcode }: { barcode: Barcode }) => {
+  const image = new Blob([barcode.barcodeImage], { type: "image/jpeg" });
+
   return (
     <div className="flex">
-      <img src={URL.createObjectURL(image)} alt="barcode" className="mr-1 w-8 h-fit my-auto" />
+      <img
+        src={URL.createObjectURL(image)}
+        alt="barcode"
+        className="mr-1 w-8 h-fit my-auto"
+      />
       <div className="my-auto">
-        <p className="font-semibold">{barcode.barcodes[0].format}</p>
-        <p>{barcode.barcodes[0].text}</p>
+        <p className="font-semibold">{barcode.format}</p>
+        <p>{barcode.text}</p>
       </div>
     </div>
   );

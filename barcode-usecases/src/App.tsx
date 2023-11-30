@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { IBarcodeScannerHandle } from "scanbot-web-sdk/@types/interfaces/i-barcode-scanner-handle";
 import { BarcodeScannerConfiguration } from "scanbot-web-sdk/@types/model/configuration/barcode-scanner-configuration";
 import { scannerService } from "./services/scannerService";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   singleBarcodeScan,
@@ -38,6 +38,10 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    toastService.resumeDetectionAfterRemoval();
+  }, []);
+
   const handleCreateBarcodeScanner = async (
     configuration: BarcodeScannerConfiguration
   ) => {
@@ -52,7 +56,7 @@ function App() {
       }
     } else {
       console.error("License is not valid");
-      toastService.showErrorToast("License is not valid");
+      toastService.showErrorToast({ message: "License is not valid" });
     }
   };
 
@@ -60,6 +64,7 @@ function App() {
     if (activeScanner) {
       scannerService.dispose();
       setActiveScanner(null);
+      toast.dismiss();
     }
   };
 

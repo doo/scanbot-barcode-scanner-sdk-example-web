@@ -1,42 +1,55 @@
 import { toast } from "react-toastify";
-import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
 import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
 import BarcodeResultToast from "../components/BarcodeResultMessage";
 import { ToastOptions } from "react-toastify";
 import { scannerService } from "./scannerService";
 
+interface BaseToastProps {
+  type?: "info" | "success" | "error" | "warning";
+  options?: ToastOptions;
+}
+
+interface MessageToastProps extends BaseToastProps {
+  message: string;
+}
+
+interface BarcodeToastProps extends BaseToastProps {
+  barcode: Barcode;
+}
+
+const defaultToastOptions: ToastOptions = {};
+
 const toastService = {
-  showToast(message: string, type: "info" | "success" | "error" | "warning") {
+  showToast({
+    message,
+    type = "info",
+    options = defaultToastOptions,
+  }: MessageToastProps) {
     toast(message, {
       type,
-      autoClose: 5000,
+      ...options,
     });
   },
 
-  showResultInfoToast(result: BarcodeResult, config?: ToastOptions) {
-    toast.info(<BarcodeResultToast barcode={result} />, { config });
+  showBarcodeInfoToast({
+    barcode,
+    options = defaultToastOptions,
+  }: BarcodeToastProps) {
+    toast.info(<BarcodeResultToast barcode={barcode} />, options);
   },
 
-  showBarcodeInfoToast(code: Barcode) {
-    toast.info(
-      `format: ${code.format}
-		  text: ${code.text}`,
-      {
-        autoClose: 5000,
-      }
-    );
+  showErrorToast({
+    message = "An error has occurred",
+    options = defaultToastOptions,
+  }: MessageToastProps) {
+    toast.error(message, options);
   },
 
-  showErrorToast(message: string) {
-    toast.error(message, {
-      autoClose: 5000,
-    });
-  },
-
-  showWarningToast(message: string) {
-    toast.warn(message, {
-      autoClose: 5000,
-    });
+  showWarningToast({
+    message,
+    options = defaultToastOptions,
+  }: MessageToastProps) {
+    toast.warn(message, options);
   },
 
   showLoadingToast(id: string | number, message = "Loading...") {
@@ -46,7 +59,8 @@ const toastService = {
   resumeDetectionAfterRemoval() {
     toast.onChange((payload) => {
       if (payload.status === "removed") {
-        scannerService.resume();
+        scannerService.getScanner()?.isDetectionPaused() &&
+          scannerService.resume();
       }
     });
   },

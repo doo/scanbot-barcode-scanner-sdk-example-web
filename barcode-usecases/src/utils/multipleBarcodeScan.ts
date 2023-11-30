@@ -3,13 +3,14 @@ import toastService from "../services/toastService";
 
 const multipleBarcodeScan = {
   containerId: "scanner",
-  showfinder: false,
   returnBarcodeImage: true,
+  showFinder: false,
   onBarcodesDetected: (result: BarcodeResult) => {
-    toastService.showResultInfoToast(result);
+    toastService.showBarcodeInfoToast({ barcode: result?.barcodes[0] });
   },
-  onError: (error: Error) => {
-    console.log(error);
+  onError: (e: Error) => {
+    console.log(e.name + ": " + e.message);
+    alert(e.name + ": " + e.message);
   },
 };
 
