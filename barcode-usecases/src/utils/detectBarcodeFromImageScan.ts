@@ -46,9 +46,9 @@ export default async function detectBarcodeFromImageScan() {
                   );
                 }
               } catch (error) {
-                toastService.showErrorToast(
-                  "Error while detecting barcodes: " + error
-                );
+                toastService.showErrorToast({
+                  message: "Error while detecting barcodes: " + error,
+                });
               }
             };
           }
@@ -56,11 +56,14 @@ export default async function detectBarcodeFromImageScan() {
         fileInput.remove();
       }
     } catch (error) {
-      toastService.showErrorToast("Error during image selection: " + error);
+      toastService.showErrorToast({
+        message: "Error during image selection: " + error,
+      });
     }
   } else {
-    toastService.showWarningToast(
-      "License not valid. Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license."
-    );
+    toastService.showWarningToast({
+      message:
+        "License not valid. Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license.",
+    });
   }
 }
