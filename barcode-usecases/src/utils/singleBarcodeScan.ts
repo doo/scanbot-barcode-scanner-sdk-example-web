@@ -9,7 +9,7 @@ const singleBarcodeScan = {
     scannerService.pause();
     toastService.showBarcodeInfoToast({
       barcode: result?.barcodes[0],
-			dismissButton: true
+      singleToast: true,
     });
   },
   onError: (e: Error) => {

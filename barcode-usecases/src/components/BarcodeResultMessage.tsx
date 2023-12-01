@@ -2,12 +2,35 @@ import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
 
 const BarcodeResultToast = ({
   barcode,
-  dismissButton,
+  singleToast,
 }: {
   barcode: Barcode;
-  dismissButton?: boolean;
+  singleToast?: boolean;
 }) => {
   const image = new Blob([barcode.barcodeImage], { type: "image/jpeg" });
+
+  if (singleToast) {
+    return (
+      <div className="flex flex-col items-center rounded-md h-full">
+        <div className="flex flex-col justify-between items-center mb-2">
+          <img
+            src={URL.createObjectURL(image)}
+            alt="barcode"
+            className="w-8 my-1"
+          />
+          <div className="my-auto text-center">
+            <p className="font-semibold">{barcode.format}</p>
+            <p>{barcode.text}</p>
+          </div>
+        </div>
+        <div className="w-full">
+          <button className="bg-red text-white py-1 w-full rounded-md">
+            Dismiss
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-8">
@@ -20,7 +43,6 @@ const BarcodeResultToast = ({
         <p className="font-semibold">{barcode.format}</p>
         <p>{barcode.text}</p>
       </div>
-      {dismissButton && <p className="my-auto ml-auto">Dismiss</p>}
     </div>
   );
 };

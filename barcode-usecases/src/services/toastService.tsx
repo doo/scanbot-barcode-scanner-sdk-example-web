@@ -39,20 +39,23 @@ const toastService = {
   showBarcodeInfoToast({
     barcode,
     options = defaultToastOptions,
-		dismissButton = false,
-  }: BarcodeToastProps & { dismissButton?: boolean }) {
-    toast.info(<BarcodeResultToast barcode={barcode} dismissButton={dismissButton} />, {
-      ...options,
-      toastId: barcode.rawBytes.join(),
-			closeButton: dismissButton ? false : true,
-    });
+    singleToast = false,
+  }: BarcodeToastProps & { singleToast?: boolean }) {
+    toast.info(
+      <BarcodeResultToast barcode={barcode} singleToast={singleToast} />,
+      {
+        ...options,
+        toastId: barcode.rawBytes.join(),
+        closeButton: singleToast ? false : true,
+      }
+    );
   },
 
   showErrorToast({
     message = "An error has occurred",
     options = defaultToastOptions,
   }: MessageToastProps) {
-    toast.error(message, { ...options, icon: true });
+    toast.error(message, { ...options, icon: true, autoClose: 4000 });
   },
 
   showWarningToast({
