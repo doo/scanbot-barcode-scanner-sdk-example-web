@@ -3,8 +3,11 @@ import toastService from "../services/toastService";
 
 const batchBarcodeScan = {
   containerId: "scanner",
+	returnBarcodeImage: true,
   onBarcodesDetected: (result: BarcodeResult) => {
-    toastService.showResultInfoToast(result);
+    toastService.showBarcodeInfoToast({
+      barcode: result?.barcodes[0],
+    });
   },
   onError: (e: Error) => {
     console.log(e.name + ": " + e.message);
