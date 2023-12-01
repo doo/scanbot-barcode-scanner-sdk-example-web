@@ -1,4 +1,4 @@
-import { toast } from "react-toastify";
+import { Slide, toast } from "react-toastify";
 import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
 import BarcodeResultToast from "../components/BarcodeResultMessage";
 import { ToastOptions } from "react-toastify";
@@ -17,7 +17,12 @@ interface BarcodeToastProps extends BaseToastProps {
   barcode: Barcode;
 }
 
-const defaultToastOptions: ToastOptions = {};
+const defaultToastOptions: ToastOptions = {
+  icon: false,
+  transition: Slide,
+  className:
+    "mb-0 shadow-none rounded-none border-b border-gray-300 last:border-0",
+};
 
 const toastService = {
   showToast({
@@ -34,15 +39,20 @@ const toastService = {
   showBarcodeInfoToast({
     barcode,
     options = defaultToastOptions,
-  }: BarcodeToastProps) {
-    toast.info(<BarcodeResultToast barcode={barcode} />, options);
+		dismissButton = false,
+  }: BarcodeToastProps & { dismissButton?: boolean }) {
+    toast.info(<BarcodeResultToast barcode={barcode} dismissButton={dismissButton} />, {
+      ...options,
+      toastId: barcode.rawBytes.join(),
+			closeButton: dismissButton ? false : true,
+    });
   },
 
   showErrorToast({
     message = "An error has occurred",
     options = defaultToastOptions,
   }: MessageToastProps) {
-    toast.error(message, options);
+    toast.error(message, { ...options, icon: true });
   },
 
   showWarningToast({

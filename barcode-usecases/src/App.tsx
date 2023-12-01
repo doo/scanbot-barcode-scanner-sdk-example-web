@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { IBarcodeScannerHandle } from "scanbot-web-sdk/@types/interfaces/i-barcode-scanner-handle";
 import { BarcodeScannerConfiguration } from "scanbot-web-sdk/@types/model/configuration/barcode-scanner-configuration";
 import { scannerService } from "./services/scannerService";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   singleBarcodeScan,
@@ -127,7 +127,7 @@ function App() {
         pauseOnFocusLoss
         draggable={false}
         theme="light"
-        className={"max-h-[30%] md:max-h-[500px] md:w-[500px] overflow-auto"}
+        className={"h-auto max-h-[30%] md:max-h-[500px] md:w-[500px] shadow-sm bottom-0 overflow-y-auto"}
       />
       <SectionList sections={sectionListData} />
       <ScannerContainer
