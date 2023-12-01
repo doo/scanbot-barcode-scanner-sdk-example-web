@@ -10,7 +10,9 @@ const findAndPickARScan = {
   onError: (error: Error) => {
     console.log(error);
   },
-  showFinder: false,
+	style: {
+		hint: "Please scan a QR code to see FindAndPick in action!",
+	},
   overlay: {
     visible: true,
     onBarcodeFound: (

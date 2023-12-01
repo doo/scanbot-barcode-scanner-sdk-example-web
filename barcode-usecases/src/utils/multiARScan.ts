@@ -1,10 +1,13 @@
-import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
 import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
+import toastService from "../services/toastService";
 
 const multiARScan = {
   containerId: "scanner",
+	returnBarcodeImage: true,
   onBarcodesDetected: (result: BarcodeResult) => {
-    console.log(result);
+    toastService.showBarcodeInfoToast({
+			barcode: result?.barcodes[0],
+		});
   },
   onError: (error: Error) => {
     console.log(error);
@@ -13,10 +16,6 @@ const multiARScan = {
   overlay: {
     visible: true,
     automaticSelectionEnabled: true,
-    onBarcodeFound: (code: Barcode) => {
-      console.log(code);
-      console.log("Barcode found");
-    },
   },
 };
 
