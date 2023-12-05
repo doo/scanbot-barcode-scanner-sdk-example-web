@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
-import BarcodeResultToast from "./BarcodeResultMessage";
+import SingleBarcodeResult from "./SingleBarcodeResult";
+import { scannerService } from "../services/scannerService";
 
 const Results = ({ barcodes }: { barcodes: Barcode[] }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -28,9 +29,12 @@ const Results = ({ barcodes }: { barcodes: Barcode[] }) => {
           {isExpanded ? "Collapse" : "Expand"}
         </button>
         {uniqueBarcodes.reverse().map((barcode) => (
-          <BarcodeResultToast
+          <SingleBarcodeResult
             key={barcode.rawBytes.join("")}
             barcode={barcode}
+            dismissable={
+              scannerService.getScanner()?.isDetectionPaused() ? true : false
+            }
           />
         ))}
       </div>

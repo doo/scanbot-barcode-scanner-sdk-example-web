@@ -1,6 +1,6 @@
 import { Slide, toast } from "react-toastify";
 import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
-import BarcodeResultToast from "../components/BarcodeResultMessage";
+import BarcodeResultToast from "../components/SingleBarcodeResult";
 import { ToastOptions } from "react-toastify";
 import { scannerService } from "./scannerService";
 
