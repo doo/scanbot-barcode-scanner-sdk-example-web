@@ -21,10 +21,15 @@ import Banner from "./components/Banner";
 import ScannerContainer from "./components/ScannerContainer";
 import CloseScannerButton from "./components/CloseScannerButton";
 import toastService from "./services/toastService";
+import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
+import Results from "./components/Results";
+import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
 
 function App() {
   const [activeScanner, setActiveScanner] =
     useState<IBarcodeScannerHandle | null>(null);
+  const [scannedBarcodes, setScannedBarcodes] = useState<Barcode[]>([]);
+  const [isSingleScan, setIsSingleScan] = useState(false);
 
   useEffect(() => {
     const scanbotOptions = {
@@ -38,9 +43,21 @@ function App() {
     };
   }, []);
 
-  useEffect(() => {
-    toastService.resumeDetectionAfterRemoval();
-  }, []);
+	
+  const scanSingleBarcode = () => {
+		initScanner(singleBarcodeScan, { isSingle: true });
+  };
+	
+  const scanBatchBarcodes = () => {
+		initScanner(batchBarcodeScan(onBarcodesDetected));
+  };
+	
+	const initScanner = (scanConfig, { isSingle = false } = {}) => {
+		if (isSingle) {
+			setIsSingleScan(true);
+		}
+		handleCreateBarcodeScanner(scanConfig);
+	};
 
   const handleCreateBarcodeScanner = async (
     configuration: BarcodeScannerConfiguration
@@ -60,6 +77,18 @@ function App() {
     }
   };
 
+  const onBarcodesDetected = (result: BarcodeResult) => {
+    setScannedBarcodes((prev) => {
+      const newBarcodes = result.barcodes.filter(
+        (newBarcode) =>
+          !prev.some(
+            (existingBarcode) => existingBarcode.text === newBarcode.text
+          )
+      );
+      return [...newBarcodes, ...prev];
+    });
+  };
+
   const handleScannerClose = () => {
     if (activeScanner) {
       scannerService.dispose();
@@ -74,7 +103,7 @@ function App() {
       data: [
         {
           title: "Scan Single Barcodes",
-          scanningFunction: () => handleCreateBarcodeScanner(singleBarcodeScan),
+          scanningFunction: scanSingleBarcode,
         },
         {
           title: "Scan Multiple Barcodes",
@@ -83,7 +112,7 @@ function App() {
         },
         {
           title: "Batch Barcode Scan",
-          scanningFunction: () => handleCreateBarcodeScanner(batchBarcodeScan),
+          scanningFunction: scanBatchBarcodes,
         },
         {
           title: "Detect Barcode from Image",
@@ -127,7 +156,7 @@ function App() {
         pauseOnFocusLoss
         draggable={false}
         theme="light"
-        className={"h-auto max-h-[250px] md:max-h-[400px] md:w-[500px] p-0 shadow-sm bottom-0 rounded-sm overflow-y-auto"}
+        className={"absolute h-[200px]"}
       />
       <SectionList sections={sectionListData} />
       <ScannerContainer
@@ -138,6 +167,9 @@ function App() {
           <CloseScannerButton handleScannerClose={handleScannerClose} />
         )}
       </ScannerContainer>
+      {activeScanner && !isSingleScan ? (
+        <Results barcodes={scannedBarcodes} />
+      ) : null}
       <Banner />
       <Footer />
     </>

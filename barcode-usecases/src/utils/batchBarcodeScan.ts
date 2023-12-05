@@ -1,18 +1,23 @@
+// utils/batchBarcodeScan.js
 import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
-import toastService from "../services/toastService";
 
-const batchBarcodeScan = {
+const batchBarcodeScan = (onDetectedCallback: (result: BarcodeResult) => void) => ({
   containerId: "scanner",
-	returnBarcodeImage: true,
+  returnBarcodeImage: true,
   onBarcodesDetected: (result: BarcodeResult) => {
-    toastService.showBarcodeInfoToast({
-      barcode: result?.barcodes[0],
-    });
+    console.log("Barcodes detected:", result.barcodes);
+    onDetectedCallback(result);
   },
   onError: (e: Error) => {
-    console.log(e.name + ": " + e.message);
+    console.error(e.name + ": " + e.message);
     alert(e.name + ": " + e.message);
   },
-};
+  style: {
+    window: {
+      widthProportion: 0.4,
+      top: "40%",
+    },
+  },
+});
 
 export default batchBarcodeScan;
