@@ -33,7 +33,7 @@ const BarcodeResultToast = ({
   }
 
   return (
-    <div className="flex h-8">
+    <div className="flex px-2 py-1 border-b border-gray-300 last:border-0">
       <img
         src={URL.createObjectURL(image)}
         alt="barcode"
