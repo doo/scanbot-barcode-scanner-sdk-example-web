@@ -8,17 +8,23 @@ const Results = ({ barcodes }: { barcodes: Barcode[] }) => {
     setIsExpanded(!isExpanded);
   };
 
+  const uniqueBarcodes = Array.from(
+    new Set(barcodes.map((barcode) => barcode.text))
+  ).map((text) => {
+    return barcodes.find((barcode) => barcode.text === text)!;
+  });
+
   return (
     <>
       <div
         className={`results-container fixed z-50 bg-white ${
-          isExpanded ? "h-[600px]" : "h-[200px]"
+          isExpanded ? "h-[100vh]" : "h-[auto]"
         } w-full md:min-w-[400px] max-w-[600px] left-1/2 transform -translate-x-1/2 bottom-0 overflow-y-auto`}
       >
         <button onClick={toggleHeight} className="text-center w-full py-0.5">
           {isExpanded ? "Collapse" : "Expand"}
         </button>
-        {barcodes.reverse().map((barcode, index) => (
+        {uniqueBarcodes.reverse().map((barcode, index) => (
           <div
             key={index}
             className="flex px-2 py-1 border-b border-gray-300 last:border-0"

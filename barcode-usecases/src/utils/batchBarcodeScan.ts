@@ -1,12 +1,10 @@
-// utils/batchBarcodeScan.js
 import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
 
-const batchBarcodeScan = (onDetectedCallback: (result: BarcodeResult) => void) => ({
+const batchBarcodeScan = (updateResults: (result: BarcodeResult) => void) => ({
   containerId: "scanner",
   returnBarcodeImage: true,
   onBarcodesDetected: (result: BarcodeResult) => {
-    console.log("Barcodes detected:", result.barcodes);
-    onDetectedCallback(result);
+    updateResults(result);
   },
   onError: (e: Error) => {
     console.error(e.name + ": " + e.message);

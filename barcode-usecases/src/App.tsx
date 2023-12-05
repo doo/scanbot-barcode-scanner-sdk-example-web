@@ -2,18 +2,6 @@ import { useState, useEffect } from "react";
 import { IBarcodeScannerHandle } from "scanbot-web-sdk/@types/interfaces/i-barcode-scanner-handle";
 import { BarcodeScannerConfiguration } from "scanbot-web-sdk/@types/model/configuration/barcode-scanner-configuration";
 import { scannerService } from "./services/scannerService";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import {
-  singleBarcodeScan,
-  multipleBarcodeScan,
-  multiARScan,
-  batchBarcodeScan,
-  scanAndCountARScan,
-  selectARScan,
-  findAndPickARScan,
-} from "./utils/index";
-import detectBarcodeFromImageScan from "./utils/detectBarcodeFromImageScan";
 import SectionList from "./components/SectionList";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -23,13 +11,12 @@ import CloseScannerButton from "./components/CloseScannerButton";
 import toastService from "./services/toastService";
 import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
 import Results from "./components/Results";
-import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
+import { menuData } from "./utils/menuData";
 
 function App() {
   const [activeScanner, setActiveScanner] =
     useState<IBarcodeScannerHandle | null>(null);
-  const [scannedBarcodes, setScannedBarcodes] = useState<Barcode[]>([]);
-  const [isSingleScan, setIsSingleScan] = useState(false);
+  const [results, setResults] = useState<Barcode[]>([]);
 
   useEffect(() => {
     const scanbotOptions = {
@@ -42,22 +29,6 @@ function App() {
       scannerService.dispose();
     };
   }, []);
-
-	
-  const scanSingleBarcode = () => {
-		initScanner(singleBarcodeScan, { isSingle: true });
-  };
-	
-  const scanBatchBarcodes = () => {
-		initScanner(batchBarcodeScan(onBarcodesDetected));
-  };
-	
-	const initScanner = (scanConfig, { isSingle = false } = {}) => {
-		if (isSingle) {
-			setIsSingleScan(true);
-		}
-		handleCreateBarcodeScanner(scanConfig);
-	};
 
   const handleCreateBarcodeScanner = async (
     configuration: BarcodeScannerConfiguration
@@ -77,88 +48,23 @@ function App() {
     }
   };
 
-  const onBarcodesDetected = (result: BarcodeResult) => {
-    setScannedBarcodes((prev) => {
-      const newBarcodes = result.barcodes.filter(
-        (newBarcode) =>
-          !prev.some(
-            (existingBarcode) => existingBarcode.text === newBarcode.text
-          )
-      );
-      return [...newBarcodes, ...prev];
-    });
-  };
+  const handleResults = (result: { barcodes: Barcode[] }) =>
+    setResults((prev) => [...prev, ...result.barcodes]);
 
   const handleScannerClose = () => {
     if (activeScanner) {
       scannerService.dispose();
       setActiveScanner(null);
-      toast.dismiss();
+      setResults([]);
     }
   };
-
-  const sectionListData = [
-    {
-      title: "Barcode Scanning Use Cases",
-      data: [
-        {
-          title: "Scan Single Barcodes",
-          scanningFunction: scanSingleBarcode,
-        },
-        {
-          title: "Scan Multiple Barcodes",
-          scanningFunction: () =>
-            handleCreateBarcodeScanner(multipleBarcodeScan),
-        },
-        {
-          title: "Batch Barcode Scan",
-          scanningFunction: scanBatchBarcodes,
-        },
-        {
-          title: "Detect Barcode from Image",
-          scanningFunction: () => detectBarcodeFromImageScan(),
-        },
-      ],
-    },
-    {
-      title: "Barcode AR Overlay Use Cases",
-      data: [
-        {
-          title: "AR-MultiScan",
-          scanningFunction: () => handleCreateBarcodeScanner(multiARScan),
-        },
-        {
-          title: "AR-SelectScan",
-          scanningFunction: () => handleCreateBarcodeScanner(selectARScan),
-        },
-        {
-          title: "AR-FindAndPickScan",
-          scanningFunction: () => handleCreateBarcodeScanner(findAndPickARScan),
-        },
-        {
-          title: "AR-Scan and Count",
-          scanningFunction: () =>
-            handleCreateBarcodeScanner(scanAndCountARScan),
-        },
-      ],
-    },
-  ];
 
   return (
     <>
       <Header />
-      <ToastContainer
-        position="bottom-center"
-        autoClose={false}
-        newestOnTop
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable={false}
-        theme="light"
-        className={"absolute h-[200px]"}
+      <SectionList
+        sections={menuData(handleCreateBarcodeScanner, handleResults)}
       />
-      <SectionList sections={sectionListData} />
       <ScannerContainer
         id="scanner"
         className="fixed top-0 bottom-0 left-0 right-0 z-20 empty:static"
@@ -167,9 +73,7 @@ function App() {
           <CloseScannerButton handleScannerClose={handleScannerClose} />
         )}
       </ScannerContainer>
-      {activeScanner && !isSingleScan ? (
-        <Results barcodes={scannedBarcodes} />
-      ) : null}
+      {activeScanner && <Results barcodes={results} />}
       <Banner />
       <Footer />
     </>
