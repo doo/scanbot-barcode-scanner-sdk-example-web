@@ -1,5 +1,4 @@
 import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
-import toastService from "../services/toastService";
 import { scannerService } from "../services/scannerService";
 
 export default async function detectBarcodeFromImageScan() {
@@ -29,26 +28,19 @@ export default async function detectBarcodeFromImageScan() {
 
             reader.onload = async () => {
               try {
-                const id = toastService.showLoadingToast(
-                  "Detecting barcodes..."
-                );
                 const result: BarcodeResult = await scanbotSDK.detectBarcodes(
                   reader.result as string
                 );
 
                 if (result.barcodes.length === 0) {
-                  toastService.updateToast(id, "No barcodes detected.", "info");
+                  console.log("No barcodes were detected in your image.");
                 } else {
-                  toastService.updateToast(
-                    id,
-                    `${result.barcodes.length} barcodes were detected in your image.`,
-                    "success"
+                  console.log(
+                    `${result.barcodes.length} barcodes were detected in your image.`
                   );
                 }
               } catch (error) {
-                toastService.showErrorToast({
-                  message: "Error while detecting barcodes: " + error,
-                });
+                console.log("Error while detecting barcodes: " + error);
               }
             };
           }
@@ -56,14 +48,11 @@ export default async function detectBarcodeFromImageScan() {
         fileInput.remove();
       }
     } catch (error) {
-      toastService.showErrorToast({
-        message: "Error during image selection: " + error,
-      });
+      console.error(error);
     }
   } else {
-    toastService.showWarningToast({
-      message:
-        "License not valid. Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license.",
-    });
+    alert(
+      "License not valid. Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license."
+    );
   }
 }

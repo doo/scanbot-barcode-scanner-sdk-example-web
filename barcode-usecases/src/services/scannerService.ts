@@ -3,7 +3,6 @@ import type { default as ScanbotSDKType } from "scanbot-web-sdk/@types/scanbot-s
 import { BarcodeScannerConfiguration } from "scanbot-web-sdk/@types/model/configuration/barcode-scanner-configuration";
 import { IBarcodeScannerHandle } from "scanbot-web-sdk/@types/interfaces/i-barcode-scanner-handle";
 import { InitializationOptions } from "scanbot-web-sdk/@types/model/configuration/initialization-options";
-import toastService from "./toastService";
 
 class ScannerService {
   private scanbotSDK: ScanbotSDKType | null = null;
@@ -44,7 +43,7 @@ class ScannerService {
     configuration: BarcodeScannerConfiguration
   ): Promise<IBarcodeScannerHandle> {
     if (!this.scanbotSDK) {
-      toastService.showErrorToast({ message: "Scanbot SDK not initialized." });
+			alert("Scanbot SDK not initialized.");
       return Promise.reject("Scanbot SDK not initialized.");
     }
 
@@ -60,7 +59,7 @@ class ScannerService {
 
   async getLicenseInfo() {
     if (!this.scanbotSDK) {
-      toastService.showErrorToast({ message: "Scanbot SDK not initialized." });
+			alert("Scanbot SDK not initialized.");
       return Promise.reject("Scanbot SDK not initialized.");
     }
 

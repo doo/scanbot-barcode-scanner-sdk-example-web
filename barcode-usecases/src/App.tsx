@@ -8,7 +8,6 @@ import Footer from "./components/Footer";
 import Banner from "./components/Banner";
 import ScannerContainer from "./components/ScannerContainer";
 import CloseScannerButton from "./components/CloseScannerButton";
-import toastService from "./services/toastService";
 import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
 import Results from "./components/Results";
 import { menuData } from "./utils/menuData";
@@ -44,7 +43,7 @@ function App() {
       }
     } else {
       console.error("License is not valid");
-      toastService.showErrorToast({ message: "License is not valid" });
+			alert("License is not valid")
     }
   };
 

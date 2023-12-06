@@ -1,12 +1,11 @@
 import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
-import toastService from "../services/toastService";
 
-const selectARScan = {
+const selectARScan = (updateResults: (result: BarcodeResult) => void) => ({
   containerId: "scanner",
-	returnBarcodeImage: true,
+  returnBarcodeImage: true,
   showFinder: false,
   onBarcodesDetected: (result: BarcodeResult) => {
-    toastService.showBarcodeInfoToast({ barcode: result?.barcodes[0] });
+    updateResults(result);
   },
   overlay: {
     visible: true,
@@ -15,6 +14,6 @@ const selectARScan = {
   onError: (error: Error) => {
     console.log(error);
   },
-};
+});
 
 export default selectARScan;

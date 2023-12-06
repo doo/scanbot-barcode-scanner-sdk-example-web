@@ -27,7 +27,8 @@ export const menuData = (
       },
       {
         title: "Scan Multiple Barcodes",
-        scanningFunction: () => handleCreateScanner(multipleBarcodeScan),
+        scanningFunction: () =>
+          handleCreateScanner(multipleBarcodeScan(updateResults)),
       },
       {
         title: "Batch Barcode Scan",
@@ -45,19 +46,22 @@ export const menuData = (
     data: [
       {
         title: "AR-MultiScan",
-        scanningFunction: () => handleCreateScanner(multiARScan),
+        scanningFunction: () => handleCreateScanner(multiARScan(updateResults)),
       },
       {
         title: "AR-SelectScan",
-        scanningFunction: () => handleCreateScanner(selectARScan),
+        scanningFunction: () =>
+          handleCreateScanner(selectARScan(updateResults)),
       },
       {
         title: "AR-FindAndPickScan",
-        scanningFunction: () => handleCreateScanner(findAndPickARScan),
+        scanningFunction: () =>
+          handleCreateScanner(findAndPickARScan(updateResults)),
       },
       {
         title: "AR-Scan and Count",
-        scanningFunction: () => handleCreateScanner(scanAndCountARScan),
+        scanningFunction: () =>
+          handleCreateScanner(scanAndCountARScan(updateResults)),
       },
     ],
   },

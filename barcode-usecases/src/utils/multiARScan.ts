@@ -1,22 +1,19 @@
 import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
-import toastService from "../services/toastService";
 
-const multiARScan = {
+const multiARScan = (updateResults: (result: BarcodeResult) => void) => ({
   containerId: "scanner",
-	returnBarcodeImage: true,
+  returnBarcodeImage: true,
   onBarcodesDetected: (result: BarcodeResult) => {
-    toastService.showBarcodeInfoToast({
-			barcode: result?.barcodes[0],
-		});
+    updateResults(result);
   },
   onError: (error: Error) => {
-    console.log(error);
+		console.log(error)
   },
   showFinder: false,
   overlay: {
     visible: true,
     automaticSelectionEnabled: true,
   },
-};
+});
 
 export default multiARScan;
