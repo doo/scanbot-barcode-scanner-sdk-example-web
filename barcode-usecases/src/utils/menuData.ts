@@ -13,7 +13,8 @@ import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
 
 export const menuData = (
   handleCreateScanner: (
-    configuration: BarcodeScannerConfiguration
+    configuration: BarcodeScannerConfiguration,
+		showResultsContainer?: boolean
   ) => Promise<undefined>,
   updateResults: (result: { barcodes: Barcode[] }) => void
 ) => [
@@ -23,7 +24,7 @@ export const menuData = (
       {
         title: "Scan Single Barcodes",
         scanningFunction: () =>
-          handleCreateScanner(singleBarcodeScan(updateResults)),
+          handleCreateScanner(singleBarcodeScan(updateResults), false),
       },
       {
         title: "Scan Multiple Barcodes",
@@ -61,7 +62,7 @@ export const menuData = (
       {
         title: "AR-Scan and Count",
         scanningFunction: () =>
-          handleCreateScanner(scanAndCountARScan(updateResults)),
+          handleCreateScanner(scanAndCountARScan()),
       },
     ],
   },

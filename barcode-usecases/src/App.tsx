@@ -11,11 +11,13 @@ import CloseScannerButton from "./components/CloseScannerButton";
 import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
 import Results from "./components/Results";
 import { menuData } from "./utils/menuData";
+import BarcodeResultToast from "./components/BarcodeResultToast";
 
 function App() {
   const [activeScanner, setActiveScanner] =
     useState<IBarcodeScannerHandle | null>(null);
   const [results, setResults] = useState<Barcode[]>([]);
+	const [showResultsContainer, setShowResultsContainer] = useState<boolean>(false);
 
   useEffect(() => {
     const scanbotOptions = {
@@ -30,13 +32,15 @@ function App() {
   }, []);
 
   const handleCreateBarcodeScanner = async (
-    configuration: BarcodeScannerConfiguration
+    configuration: BarcodeScannerConfiguration,
+		showResultsContainer: boolean = true
   ) => {
     const licenseInfo = await scannerService.getLicenseInfo();
     if (licenseInfo.isValid()) {
       try {
         await scannerService.createBarcodeScanner(configuration);
         setActiveScanner(scannerService.getScanner());
+				setShowResultsContainer(showResultsContainer);
       } catch (error) {
         console.error("Error creating barcode scanner", error);
         return Promise.reject(`Error creating barcode scanner: ${error}`);
@@ -62,6 +66,11 @@ function App() {
     }
   };
 
+  const handleDismiss = () => {
+    scannerService.resume();
+    handleClearResults();
+  };
+
   return (
     <>
       <Header />
@@ -76,8 +85,11 @@ function App() {
           <CloseScannerButton handleScannerClose={handleScannerClose} />
         )}
       </ScannerContainer>
-      {activeScanner && (
+      {showResultsContainer && (
         <Results barcodes={results} handleClearResults={handleClearResults} />
+      )}
+      {(results.length > 0 && !showResultsContainer) && (
+        <BarcodeResultToast result={results[0]} handleDismiss={handleDismiss} />
       )}
       <Banner />
       <Footer />

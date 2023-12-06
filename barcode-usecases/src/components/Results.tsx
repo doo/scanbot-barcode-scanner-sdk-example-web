@@ -38,7 +38,7 @@ const Results = ({
           <button onClick={toggleHeight} className="text-center py-0.5">
             {isExpanded ? "Collapse" : "Expand"}
           </button>
-          {!isSingleScan && <span onClick={handleClearResults}>Clear</span>}
+          {!isSingleScan && <span onClick={handleClearResults} className="cursor-pointer">Clear</span>}
         </div>
         {uniqueBarcodes.reverse().map((barcode) => (
           <SingleBarcodeResult
