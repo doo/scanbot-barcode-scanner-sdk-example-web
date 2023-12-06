@@ -3,8 +3,16 @@ import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
 import SingleBarcodeResult from "./SingleBarcodeResult";
 import { scannerService } from "../services/scannerService";
 
-const Results = ({ barcodes }: { barcodes: Barcode[] }) => {
+const Results = ({
+  barcodes,
+  handleClearResults,
+}: {
+  barcodes: Barcode[];
+  handleClearResults: () => void;
+}) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const isSingleScan = scannerService.getScanner()?.isDetectionPaused();
+  const defaultHeight = isSingleScan ? "h-[40%]" : "h-[20%]";
 
   const toggleHeight = () => {
     setIsExpanded(!isExpanded);
@@ -19,22 +27,25 @@ const Results = ({ barcodes }: { barcodes: Barcode[] }) => {
   return (
     <>
       <div
-        className={`results-container fixed z-50 bg-white ${
+        className={`results-container fixed z-50 bg-red text-white ${
           isExpanded
             ? "h-[100%] transition-all duration-10 ease-in-out"
-            : "h-[5%] transition-all duration-10 ease-in-out"
+            : `${defaultHeight} transition-all duration-10 ease-in-out`
         } w-full md:min-w-[400px] max-w-[600px] left-1/2 transform -translate-x-1/2 bottom-0 overflow-y-auto`}
       >
-        <button onClick={toggleHeight} className="text-center w-full py-0.5">
-          {isExpanded ? "Collapse" : "Expand"}
-        </button>
+        <div className="flex justify-between px-2 py-1 items-center">
+          <span>{`${uniqueBarcodes.length} codes`}</span>
+          <button onClick={toggleHeight} className="text-center py-0.5">
+            {isExpanded ? "Collapse" : "Expand"}
+          </button>
+          {!isSingleScan && <span onClick={handleClearResults}>Clear</span>}
+        </div>
         {uniqueBarcodes.reverse().map((barcode) => (
           <SingleBarcodeResult
             key={barcode.rawBytes.join("")}
             barcode={barcode}
-            dismissable={
-              scannerService.getScanner()?.isDetectionPaused() ? true : false
-            }
+            dismissable={isSingleScan ? true : false}
+            handleClearResults={handleClearResults}
           />
         ))}
       </div>

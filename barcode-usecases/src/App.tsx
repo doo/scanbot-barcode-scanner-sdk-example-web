@@ -43,12 +43,16 @@ function App() {
       }
     } else {
       console.error("License is not valid");
-			alert("License is not valid")
+      alert("License is not valid");
     }
   };
 
   const handleResults = (result: { barcodes: Barcode[] }) =>
     setResults((prev) => [...prev, ...result.barcodes]);
+
+  const handleClearResults = () => {
+    setResults([]);
+  };
 
   const handleScannerClose = () => {
     if (activeScanner) {
@@ -72,7 +76,9 @@ function App() {
           <CloseScannerButton handleScannerClose={handleScannerClose} />
         )}
       </ScannerContainer>
-      {activeScanner && <Results barcodes={results} />}
+      {activeScanner && (
+        <Results barcodes={results} handleClearResults={handleClearResults} />
+      )}
       <Banner />
       <Footer />
     </>
