@@ -8,9 +8,8 @@ import Banner from "./components/Banner";
 import ScannerContainer from "./components/ScannerContainer";
 import CloseScannerButton from "./components/CloseScannerButton";
 import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
-import Results from "./components/Results";
+import ResultsContainer from "./components/ResultsContainer";
 import { menuData } from "./utils/menuData";
-import BarcodeResultToast from "./components/BarcodeResultToast";
 import {
   HandleCreateScannerType,
   ResultsType,
@@ -31,9 +30,6 @@ function App() {
     scannerService.initialize(scanbotOptions);
 
     setTimeout(() => {
-      alert(
-        "Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license."
-      );
       scannerService.dispose();
       handleClearResults();
     }, 60000);
@@ -97,20 +93,14 @@ function App() {
           <CloseScannerButton handleScannerClose={handleScannerClose} />
         )}
       </ScannerContainer>
-      {activeScanner !== null &&
-        (results.length > 0 && resultsType === "single" ? (
-          <BarcodeResultToast
-            result={results[0]}
-            handleDismiss={handleDismiss}
-          />
-        ) : (
-          resultsType === "multiple" && (
-            <Results
-              barcodes={results}
-              handleClearResults={handleClearResults}
-            />
-          )
-        ))}
+      {activeScanner && (
+        <ResultsContainer
+          barcodes={results}
+          resultsType={resultsType}
+          handleDismiss={handleDismiss}
+          handleClearResults={handleClearResults}
+        />
+      )}
       <Banner />
       <Footer />
     </>

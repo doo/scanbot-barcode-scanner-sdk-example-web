@@ -1,6 +1,6 @@
 import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
 
-const BarcodeResultToast = ({
+const ResultToast = ({
   result,
   handleDismiss,
 }: {
@@ -8,7 +8,6 @@ const BarcodeResultToast = ({
   handleDismiss: () => void;
 }) => {
   const { barcodeImage, format, text } = result;
-
   const image = new Blob([barcodeImage], { type: "image/jpeg" });
 
   return (
@@ -34,4 +33,4 @@ const BarcodeResultToast = ({
   );
 };
 
-export default BarcodeResultToast;
+export default ResultToast;
