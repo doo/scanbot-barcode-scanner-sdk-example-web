@@ -1,6 +1,5 @@
-import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
 import ResultToast from "./ResultToast";
-import { ResultsType } from "../utils/types";
+import { ResultsContainerType } from "../utils/types";
 import ResultsTray from "./ResultsTray";
 
 const ResultsContainer = ({
@@ -8,12 +7,7 @@ const ResultsContainer = ({
   handleClearResults,
   resultsType,
   handleDismiss,
-}: {
-  barcodes: Barcode[];
-  handleClearResults: () => void;
-  resultsType: ResultsType;
-  handleDismiss: () => void;
-}) => {
+}: ResultsContainerType) => {
   return (
     <>
       {resultsType === "single" && barcodes.length > 0 && (

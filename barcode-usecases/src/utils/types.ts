@@ -12,3 +12,10 @@ export type HandleCreateScannerType = (
   configuration: BarcodeScannerConfiguration,
   type: ResultsType
 ) => Promise<undefined>;
+
+export type ResultsContainerType = {
+  barcodes: Barcode[];
+  handleClearResults: () => void;
+  resultsType: ResultsType;
+  handleDismiss: () => void;
+};
