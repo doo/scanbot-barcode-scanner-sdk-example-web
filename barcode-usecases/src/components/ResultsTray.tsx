@@ -64,7 +64,7 @@ const ResultsTray = ({
             </span>
           )}
         </div>
-        {uniqueBarcodes.length > 0 && (
+        {uniqueBarcodes.length >= 1 && (
           <div className="overflow-y-auto max-h-[calc(100%-48px)]">
             {uniqueBarcodes.reverse().map((barcode) => (
               <BarcodeResult
