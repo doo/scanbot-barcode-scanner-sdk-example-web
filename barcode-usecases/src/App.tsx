@@ -23,18 +23,20 @@ function App() {
   const [resultsType, setResultsType] = useState<ResultsType>(null);
 
   useEffect(() => {
-    const scanbotOptions = {
-      licenseKey: "",
-    };
+    const licenseKey = "";
 
-    scannerService.initialize(scanbotOptions);
+    scannerService.initialize({
+      licenseKey: licenseKey,
+    });
 
-    setTimeout(() => {
-      scannerService.dispose();
-      handleClearResults();
-    }, 6000000);
+    const licenseTimeout = setTimeout(() => {
+      handleScannerClose();
+      setResultsType(null);
+      console.warn("Trial mode deactivated.");
+    }, 60000);
 
     return () => {
+      clearTimeout(licenseTimeout);
       scannerService.dispose();
     };
   }, []);
@@ -67,11 +69,9 @@ function App() {
   };
 
   const handleScannerClose = () => {
-    if (activeScanner) {
-      scannerService.dispose();
-      setActiveScanner(null);
-      handleClearResults();
-    }
+    scannerService.dispose();
+    setActiveScanner(null);
+    handleClearResults();
   };
 
   const handleDismiss = () => {
