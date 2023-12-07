@@ -1,12 +1,10 @@
 import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
 
-const scanAndCountARScan = (
-  updateResults: (result: BarcodeResult) => void
-) => ({
+const scanAndCountARScan = () => ({
   containerId: "scanner",
-  showfinder: false,
+  showFinder: false,
   onBarcodesDetected: (result: BarcodeResult) => {
-    updateResults(result);
+    console.log(result);
   },
   onError: (error: Error) => {
     console.log(error);

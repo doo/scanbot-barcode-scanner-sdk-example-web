@@ -63,6 +63,7 @@ function App() {
       scannerService.dispose();
       setActiveScanner(null);
       setResults([]);
+			setShowResultsContainer(false);
     }
   };
 

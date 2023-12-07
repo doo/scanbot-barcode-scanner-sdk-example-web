@@ -62,7 +62,7 @@ export const menuData = (
       {
         title: "AR-Scan and Count",
         scanningFunction: () =>
-          handleCreateScanner(scanAndCountARScan()),
+          handleCreateScanner(scanAndCountARScan(), false),
       },
     ],
   },

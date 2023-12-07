@@ -12,6 +12,12 @@ const singleBarcodeScan = (updateResults: (result: BarcodeResult) => void) => ({
     console.log(e.name + ": " + e.message);
     alert(e.name + ": " + e.message);
   },
+  style: {
+    window: {
+      widthProportion: 0.5,
+      top: "40%",
+    },
+  },
 });
 
 export default singleBarcodeScan;

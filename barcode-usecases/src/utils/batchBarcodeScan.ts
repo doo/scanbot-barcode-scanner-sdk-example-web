@@ -12,7 +12,7 @@ const batchBarcodeScan = (updateResults: (result: BarcodeResult) => void) => ({
   },
   style: {
     window: {
-      widthProportion: 0.4,
+      widthProportion: 0.5,
       top: "40%",
     },
   },
