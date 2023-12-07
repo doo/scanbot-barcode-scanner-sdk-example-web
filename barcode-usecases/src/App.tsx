@@ -23,16 +23,18 @@ function App() {
   const [resultsType, setResultsType] = useState<ResultsType>(null);
 
   useEffect(() => {
-    const licenseKey = "";
+    const scanbotOptions = {
+      licenseKey: "",
+    };
 
-    scannerService.initialize({
-      licenseKey: licenseKey,
-    });
+    scannerService.initialize(scanbotOptions);
 
     const licenseTimeout = setTimeout(() => {
-      handleScannerClose();
-      setResultsType(null);
-      console.warn("Trial mode deactivated.");
+      scannerService.dispose();
+      handleClearResults();
+      alert(
+        "Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license."
+      );
     }, 60000);
 
     return () => {
