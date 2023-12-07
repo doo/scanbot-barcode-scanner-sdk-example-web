@@ -8,13 +8,10 @@ import {
   findAndPickARScan,
 } from "./index";
 import detectBarcodeFromImageScan from "./detectBarcodeFromImageScan";
-import { BarcodeScannerConfiguration } from "scanbot-web-sdk/@types/model/configuration/barcode-scanner-configuration";
-import { UpdateResultsType } from "./types";
+import { UpdateResultsType, HandleCreateScannerType } from "./types";
 
 export const menuData = (
-  handleCreateScanner: (
-    configuration: BarcodeScannerConfiguration
-  ) => Promise<undefined>,
+  handleCreateScanner: HandleCreateScannerType,
   updateResults: UpdateResultsType
 ) => [
   {
@@ -23,17 +20,17 @@ export const menuData = (
       {
         title: "Scan Single Barcodes",
         scanningFunction: () =>
-          handleCreateScanner(singleBarcodeScan(updateResults)),
+          handleCreateScanner(singleBarcodeScan(updateResults), "single"),
       },
       {
         title: "Scan Multiple Barcodes",
         scanningFunction: () =>
-          handleCreateScanner(multipleBarcodeScan(updateResults)),
+          handleCreateScanner(multipleBarcodeScan(updateResults), "multiple"),
       },
       {
         title: "Batch Barcode Scan",
         scanningFunction: () =>
-          handleCreateScanner(batchBarcodeScan(updateResults)),
+          handleCreateScanner(batchBarcodeScan(updateResults), "multiple"),
       },
       {
         title: "Detect Barcode from Image",
@@ -46,21 +43,23 @@ export const menuData = (
     data: [
       {
         title: "AR-MultiScan",
-        scanningFunction: () => handleCreateScanner(multiARScan(updateResults)),
+        scanningFunction: () =>
+          handleCreateScanner(multiARScan(updateResults), "multiple"),
       },
       {
         title: "AR-SelectScan",
         scanningFunction: () =>
-          handleCreateScanner(selectARScan(updateResults)),
+          handleCreateScanner(selectARScan(updateResults), "multiple"),
       },
       {
         title: "AR-FindAndPickScan",
         scanningFunction: () =>
-          handleCreateScanner(findAndPickARScan(updateResults)),
+          handleCreateScanner(findAndPickARScan(updateResults), "multiple"),
       },
       {
         title: "AR-Scan and Count",
-        scanningFunction: () => handleCreateScanner(scanAndCountARScan()),
+        scanningFunction: () =>
+          handleCreateScanner(scanAndCountARScan(), "multiple"),
       },
     ],
   },

@@ -5,7 +5,7 @@ const batchBarcodeScan = (updateResults: UpdateResultsType) => ({
   containerId: "scanner",
   returnBarcodeImage: true,
   onBarcodesDetected: (result: BarcodeResult) => {
-    updateResults(result, "multiple");
+    updateResults(result);
   },
   onError: (e: Error) => {
     console.error(e.name + ": " + e.message);

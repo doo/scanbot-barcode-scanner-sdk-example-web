@@ -6,7 +6,7 @@ const multipleBarcodeScan = (updateResults: UpdateResultsType) => ({
   returnBarcodeImage: true,
   showFinder: false,
   onBarcodesDetected: (result: BarcodeResult) => {
-    updateResults(result, "multiple");
+    updateResults(result);
   },
   onError: (error: Error) => {
     console.error(error);

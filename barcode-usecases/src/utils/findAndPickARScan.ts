@@ -22,7 +22,7 @@ const findAndPickARScan = (updateResults: UpdateResultsType) => ({
     ) => {
       if (code.format === "QR_CODE") {
         console.log(code);
-        updateResults({ barcodes: [code] }, "multiple");
+        updateResults({ barcodes: [code] });
         polygon.style({
           fill: "rgba(0, 255, 0, 0.3)",
           stroke: "rgba(0, 255, 0, 1)",

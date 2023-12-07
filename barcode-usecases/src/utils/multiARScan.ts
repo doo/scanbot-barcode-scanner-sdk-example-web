@@ -5,7 +5,7 @@ const multiARScan = (updateResults: UpdateResultsType) => ({
   containerId: "scanner",
   returnBarcodeImage: true,
   onBarcodesDetected: (result: BarcodeResult) => {
-    updateResults(result, "multiple");
+    updateResults(result);
   },
   onError: (error: Error) => {
     console.log(error);

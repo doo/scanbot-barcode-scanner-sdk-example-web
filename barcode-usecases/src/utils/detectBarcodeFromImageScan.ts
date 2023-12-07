@@ -34,8 +34,11 @@ export default async function detectBarcodeFromImageScan() {
 
                 if (result.barcodes.length === 0) {
                   console.log("No barcodes were detected in your image.");
+                  alert("No barcodes were detected in your image.");
                 } else {
-									alert(`${result.barcodes.length} barcodes were detected in your image.`);
+                  alert(
+                    `${result.barcodes.length} barcodes were detected in your image.`
+                  );
                   console.log(
                     `${result.barcodes.length} barcodes were detected in your image.`
                   );

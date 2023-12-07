@@ -6,7 +6,7 @@ const selectARScan = (updateResults: UpdateResultsType) => ({
   returnBarcodeImage: true,
   showFinder: false,
   onBarcodesDetected: (result: BarcodeResult) => {
-    updateResults(result, "multiple");
+    updateResults(result);
   },
   overlay: {
     visible: true,

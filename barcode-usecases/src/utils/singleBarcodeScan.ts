@@ -7,7 +7,7 @@ const singleBarcodeScan = (updateResults: UpdateResultsType) => ({
   returnBarcodeImage: true,
   onBarcodesDetected: (result: BarcodeResult) => {
     scannerService.pause();
-    updateResults(result, "single");
+    updateResults(result);
   },
   onError: (e: Error) => {
     console.log(e.name + ": " + e.message);

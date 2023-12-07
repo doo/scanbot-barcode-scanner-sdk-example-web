@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { IBarcodeScannerHandle } from "scanbot-web-sdk/@types/interfaces/i-barcode-scanner-handle";
-import { BarcodeScannerConfiguration } from "scanbot-web-sdk/@types/model/configuration/barcode-scanner-configuration";
 import { scannerService } from "./services/scannerService";
 import SectionList from "./components/SectionList";
 import Header from "./components/Header";
@@ -12,7 +11,11 @@ import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
 import Results from "./components/Results";
 import { menuData } from "./utils/menuData";
 import BarcodeResultToast from "./components/BarcodeResultToast";
-import { ResultsType, UpdateResultsType } from "./utils/types";
+import {
+  HandleCreateScannerType,
+  ResultsType,
+  UpdateResultsType,
+} from "./utils/types";
 
 function App() {
   const [activeScanner, setActiveScanner] =
@@ -40,14 +43,16 @@ function App() {
     };
   }, []);
 
-  const handleCreateBarcodeScanner = async (
-    configuration: BarcodeScannerConfiguration
+  const handleCreateBarcodeScanner: HandleCreateScannerType = async (
+    configuration,
+    type
   ) => {
     const licenseInfo = await scannerService.getLicenseInfo();
     if (licenseInfo.isValid()) {
       try {
         await scannerService.createBarcodeScanner(configuration);
         setActiveScanner(scannerService.getScanner());
+        setResultsType(type);
       } catch (error) {
         console.error("Error creating barcode scanner", error);
         return Promise.reject(`Error creating barcode scanner: ${error}`);
@@ -58,10 +63,8 @@ function App() {
     }
   };
 
-  const handleResults: UpdateResultsType = (result, type) => {
+  const handleResults: UpdateResultsType = (result) =>
     setResults((prev) => [...prev, ...result.barcodes]);
-    setResultsType(type);
-  };
 
   const handleClearResults = () => {
     setResults([]);
@@ -94,14 +97,19 @@ function App() {
           <CloseScannerButton handleScannerClose={handleScannerClose} />
         )}
       </ScannerContainer>
-      {results.length > 0 &&
-        (resultsType === "multiple" ? (
-          <Results barcodes={results} handleClearResults={handleClearResults} />
-        ) : (
+      {activeScanner !== null &&
+        (results.length > 0 && resultsType === "single" ? (
           <BarcodeResultToast
             result={results[0]}
             handleDismiss={handleDismiss}
           />
+        ) : (
+          resultsType === "multiple" && (
+            <Results
+              barcodes={results}
+              handleClearResults={handleClearResults}
+            />
+          )
         ))}
       <Banner />
       <Footer />
