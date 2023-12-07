@@ -94,7 +94,7 @@ function App() {
           <CloseScannerButton handleScannerClose={handleScannerClose} />
         )}
       </ScannerContainer>
-      {results.length &&
+      {results.length > 0 &&
         (resultsType === "multiple" ? (
           <Results barcodes={results} handleClearResults={handleClearResults} />
         ) : (
