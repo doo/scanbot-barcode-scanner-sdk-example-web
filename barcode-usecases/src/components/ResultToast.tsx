@@ -11,8 +11,8 @@ const ResultToast = ({
   const image = new Blob([barcodeImage], { type: "image/jpeg" });
 
   return (
-    <div className="absolute left-1/2 bottom-0 -translate-x-1/2 bg-white rounded-md py-2 px-2 min-w-[400px] max-w-[600px] shadow-sm z-50">
-      <div className="flex flex-col items-center gap-1 text-center mx-1 my-2">
+    <div className="absolute left-1/2 bottom-0 -translate-x-1/2 bg-white rounded-t-md sm:rounded-b-md p-3 w-full max-w-[500px] shadow-sm z-50">
+      <div className="flex flex-col items-center gap-2 text-center">
         <img
           src={URL.createObjectURL(image)}
           alt="barcode"
