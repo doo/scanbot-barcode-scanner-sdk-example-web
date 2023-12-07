@@ -1,10 +1,11 @@
 import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
+import { UpdateResultsType } from "./types";
 
-const batchBarcodeScan = (updateResults: (result: BarcodeResult) => void) => ({
+const batchBarcodeScan = (updateResults: UpdateResultsType) => ({
   containerId: "scanner",
   returnBarcodeImage: true,
   onBarcodesDetected: (result: BarcodeResult) => {
-    updateResults(result);
+    updateResults(result, "multiple");
   },
   onError: (e: Error) => {
     console.error(e.name + ": " + e.message);

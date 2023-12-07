@@ -1,12 +1,13 @@
 import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
 import { scannerService } from "../services/scannerService";
+import { UpdateResultsType } from "./types";
 
-const singleBarcodeScan = (updateResults: (result: BarcodeResult) => void) => ({
+const singleBarcodeScan = (updateResults: UpdateResultsType) => ({
   containerId: "scanner",
   returnBarcodeImage: true,
   onBarcodesDetected: (result: BarcodeResult) => {
     scannerService.pause();
-    updateResults(result);
+    updateResults(result, "single");
   },
   onError: (e: Error) => {
     console.log(e.name + ": " + e.message);

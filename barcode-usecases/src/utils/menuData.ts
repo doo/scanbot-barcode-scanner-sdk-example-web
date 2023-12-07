@@ -9,14 +9,13 @@ import {
 } from "./index";
 import detectBarcodeFromImageScan from "./detectBarcodeFromImageScan";
 import { BarcodeScannerConfiguration } from "scanbot-web-sdk/@types/model/configuration/barcode-scanner-configuration";
-import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
+import { UpdateResultsType } from "./types";
 
 export const menuData = (
   handleCreateScanner: (
-    configuration: BarcodeScannerConfiguration,
-		showResultsContainer?: boolean
+    configuration: BarcodeScannerConfiguration
   ) => Promise<undefined>,
-  updateResults: (result: { barcodes: Barcode[] }) => void
+  updateResults: UpdateResultsType
 ) => [
   {
     title: "Barcode Scanning Use Cases",
@@ -24,7 +23,7 @@ export const menuData = (
       {
         title: "Scan Single Barcodes",
         scanningFunction: () =>
-          handleCreateScanner(singleBarcodeScan(updateResults), false),
+          handleCreateScanner(singleBarcodeScan(updateResults)),
       },
       {
         title: "Scan Multiple Barcodes",
@@ -61,8 +60,7 @@ export const menuData = (
       },
       {
         title: "AR-Scan and Count",
-        scanningFunction: () =>
-          handleCreateScanner(scanAndCountARScan(), false),
+        scanningFunction: () => handleCreateScanner(scanAndCountARScan()),
       },
     ],
   },

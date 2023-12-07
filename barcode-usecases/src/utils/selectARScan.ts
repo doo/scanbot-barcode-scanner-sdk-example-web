@@ -1,11 +1,12 @@
 import { BarcodeResult } from "scanbot-web-sdk/@types/model/barcode/barcode-result";
+import { UpdateResultsType } from "./types";
 
-const selectARScan = (updateResults: (result: BarcodeResult) => void) => ({
+const selectARScan = (updateResults: UpdateResultsType) => ({
   containerId: "scanner",
   returnBarcodeImage: true,
   showFinder: false,
   onBarcodesDetected: (result: BarcodeResult) => {
-    updateResults(result);
+    updateResults(result, "multiple");
   },
   overlay: {
     visible: true,

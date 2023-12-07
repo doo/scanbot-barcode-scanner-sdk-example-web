@@ -12,12 +12,13 @@ import { Barcode } from "scanbot-web-sdk/@types/model/barcode/barcode";
 import Results from "./components/Results";
 import { menuData } from "./utils/menuData";
 import BarcodeResultToast from "./components/BarcodeResultToast";
+import { ResultsType, UpdateResultsType } from "./utils/types";
 
 function App() {
   const [activeScanner, setActiveScanner] =
     useState<IBarcodeScannerHandle | null>(null);
   const [results, setResults] = useState<Barcode[]>([]);
-	const [showResultsContainer, setShowResultsContainer] = useState<boolean>(false);
+  const [resultsType, setResultsType] = useState<ResultsType>(null);
 
   useEffect(() => {
     const scanbotOptions = {
@@ -26,21 +27,27 @@ function App() {
 
     scannerService.initialize(scanbotOptions);
 
+    setTimeout(() => {
+      alert(
+        "Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license."
+      );
+      scannerService.dispose();
+      handleClearResults();
+    }, 60000);
+
     return () => {
       scannerService.dispose();
     };
   }, []);
 
   const handleCreateBarcodeScanner = async (
-    configuration: BarcodeScannerConfiguration,
-		showResultsContainer: boolean = true
+    configuration: BarcodeScannerConfiguration
   ) => {
     const licenseInfo = await scannerService.getLicenseInfo();
     if (licenseInfo.isValid()) {
       try {
         await scannerService.createBarcodeScanner(configuration);
         setActiveScanner(scannerService.getScanner());
-				setShowResultsContainer(showResultsContainer);
       } catch (error) {
         console.error("Error creating barcode scanner", error);
         return Promise.reject(`Error creating barcode scanner: ${error}`);
@@ -51,8 +58,10 @@ function App() {
     }
   };
 
-  const handleResults = (result: { barcodes: Barcode[] }) =>
+  const handleResults: UpdateResultsType = (result, type) => {
     setResults((prev) => [...prev, ...result.barcodes]);
+    setResultsType(type);
+  };
 
   const handleClearResults = () => {
     setResults([]);
@@ -62,8 +71,7 @@ function App() {
     if (activeScanner) {
       scannerService.dispose();
       setActiveScanner(null);
-      setResults([]);
-			setShowResultsContainer(false);
+      handleClearResults();
     }
   };
 
@@ -86,12 +94,15 @@ function App() {
           <CloseScannerButton handleScannerClose={handleScannerClose} />
         )}
       </ScannerContainer>
-      {showResultsContainer && (
-        <Results barcodes={results} handleClearResults={handleClearResults} />
-      )}
-      {(results.length > 0 && !showResultsContainer) && (
-        <BarcodeResultToast result={results[0]} handleDismiss={handleDismiss} />
-      )}
+      {results.length &&
+        (resultsType === "multiple" ? (
+          <Results barcodes={results} handleClearResults={handleClearResults} />
+        ) : (
+          <BarcodeResultToast
+            result={results[0]}
+            handleDismiss={handleDismiss}
+          />
+        ))}
       <Banner />
       <Footer />
     </>
