@@ -82,7 +82,7 @@ function App() {
   };
 
   return (
-    <>
+    <div className={`h-screen ${activeScanner && "overflow-hidden"}`}>
       <Header />
       <SectionList
         sections={menuData(handleCreateBarcodeScanner, handleResults)}
@@ -105,7 +105,7 @@ function App() {
       )}
       <Banner />
       <Footer />
-    </>
+    </div>
   );
 }
 
