@@ -16,32 +16,37 @@ import {
   UpdateResultsType,
 } from "./utils/types";
 
-function App() {
-  const [activeScanner, setActiveScanner] =
-    useState<IBarcodeScannerHandle | null>(null);
-  const [results, setResults] = useState<Barcode[]>([]);
-  const [resultsType, setResultsType] = useState<ResultsType>(null);
 
-  useEffect(() => {
-    const scanbotOptions = {
-      licenseKey: "",
-    };
+useEffect(() => {
+  const scanbotOptions = {
+    licenseKey: "",
+  };
 
-    scannerService.initialize(scanbotOptions);
+  let licenseTimeout: number;
 
-    const licenseTimeout = setTimeout(() => {
-      scannerService.dispose();
-      handleClearResults();
+  const initScanbot = async () => {
+    await scannerService.initialize(scanbotOptions);
+
+    licenseTimeout = setTimeout(async () => {
+      const licenseInfo = await scannerService.getLicenseInfo();
+      if (licenseInfo?.isValid()) {
+        clearTimeout(licenseTimeout);
+        return;
+      }
+      handleScannerClose();
       alert(
         "Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license."
       );
-    }, 60000);
+    }, 61000);
+  };
 
-    return () => {
-      clearTimeout(licenseTimeout);
-      scannerService.dispose();
-    };
-  }, []);
+  initScanbot();
+
+  return () => {
+    clearTimeout(licenseTimeout);
+    scannerService.dispose();
+  };
+}, []);
 
   const handleCreateBarcodeScanner: HandleCreateScannerType = async (
     configuration,
