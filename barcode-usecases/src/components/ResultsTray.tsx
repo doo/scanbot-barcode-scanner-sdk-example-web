@@ -43,13 +43,13 @@ const ResultsTray = ({
     return barcodes.find((barcode) => barcode.text === text)!;
   });
 
+  const containerClassList = `fixed z-50 bg-white/80 transition-all duration-10 ease-in-out w-full max-w-[500px] left-1/2 transform -translate-x-1/2 bottom-0 rounded-t-md sm:rounded-b-md shadow-sm`;
+	
+	const containerHeight = isExpanded ? "h-[100%]" : "h-[25%]";
+
   return (
     <>
-      <div
-        className={`results-container fixed z-50 bg-white/80 transition-all duration-10 ease-in-out ${
-          isExpanded ? "h-[100%]" : "h-[25%]"
-        } w-full max-w-[500px] left-1/2 transform -translate-x-1/2 bottom-0 rounded-t-md sm:rounded-b-md shadow-sm`}
-      >
+      <div className={`${containerClassList} ${containerHeight}`}>
         <div className="sticky top-0 grid grid-cols-3 px-2 py-1 items-center bg-red text-white rounded-t-md">
           <span>{`${uniqueBarcodes.length} codes`}</span>
           <button onClick={toggleHeight} className="text-center py-0.5">
