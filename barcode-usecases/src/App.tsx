@@ -16,37 +16,42 @@ import {
   UpdateResultsType,
 } from "./utils/types";
 
+function App() {
+  const [activeScanner, setActiveScanner] =
+    useState<IBarcodeScannerHandle | null>(null);
+  const [results, setResults] = useState<Barcode[]>([]);
+  const [resultsType, setResultsType] = useState<ResultsType>(null);
 
-useEffect(() => {
-  const scanbotOptions = {
-    licenseKey: "",
-  };
+  useEffect(() => {
+    const scanbotOptions = {
+      licenseKey: "",
+    };
 
-  let licenseTimeout: number;
+    let licenseTimeout: number;
 
-  const initScanbot = async () => {
-    await scannerService.initialize(scanbotOptions);
+    const initScanbot = async () => {
+      await scannerService.initialize(scanbotOptions);
 
-    licenseTimeout = setTimeout(async () => {
-      const licenseInfo = await scannerService.getLicenseInfo();
-      if (licenseInfo?.isValid()) {
-        clearTimeout(licenseTimeout);
-        return;
-      }
-      handleScannerClose();
-      alert(
-        "Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license."
-      );
-    }, 61000);
-  };
+      licenseTimeout = setTimeout(async () => {
+        const licenseInfo = await scannerService.getLicenseInfo();
+        if (licenseInfo?.isValid()) {
+          clearTimeout(licenseTimeout);
+          return;
+        }
+        handleScannerClose();
+        alert(
+          "Your license is corrupted or expired, Scanbot features are disabled. Please restart the app in order to receive one minute valid license."
+        );
+      }, 61000);
+    };
 
-  initScanbot();
+    initScanbot();
 
-  return () => {
-    clearTimeout(licenseTimeout);
-    scannerService.dispose();
-  };
-}, []);
+    return () => {
+      clearTimeout(licenseTimeout);
+      scannerService.dispose();
+    };
+  }, []);
 
   const handleCreateBarcodeScanner: HandleCreateScannerType = async (
     configuration,
@@ -78,7 +83,7 @@ useEffect(() => {
   const handleScannerClose = () => {
     scannerService.dispose();
     setActiveScanner(null);
-    handleClearResults();
+    setResults([]);
   };
 
   const handleDismiss = () => {
