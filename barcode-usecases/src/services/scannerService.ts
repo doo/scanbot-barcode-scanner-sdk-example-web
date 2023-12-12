@@ -43,7 +43,7 @@ class ScannerService {
     configuration: BarcodeScannerConfiguration
   ): Promise<IBarcodeScannerHandle> {
     if (!this.scanbotSDK) {
-			alert("Scanbot SDK not initialized.");
+      alert("Scanbot SDK not initialized.");
       return Promise.reject("Scanbot SDK not initialized.");
     }
 
@@ -59,7 +59,7 @@ class ScannerService {
 
   async getLicenseInfo() {
     if (!this.scanbotSDK) {
-			alert("Scanbot SDK not initialized.");
+      alert("Scanbot SDK not initialized.");
       return Promise.reject("Scanbot SDK not initialized.");
     }
 
