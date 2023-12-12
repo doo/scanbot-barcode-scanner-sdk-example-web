@@ -44,8 +44,8 @@ const ResultsTray = ({
   });
 
   const containerClassList = `fixed z-50 bg-white/80 transition-all duration-10 ease-in-out w-full max-w-[500px] left-1/2 transform -translate-x-1/2 bottom-0 rounded-t-md sm:rounded-b-md shadow-sm`;
-	
-	const containerHeight = isExpanded ? "h-[100%]" : "h-[25%]";
+
+  const containerHeight = isExpanded ? "h-[100%]" : "h-[25%]";
 
   return (
     <>
