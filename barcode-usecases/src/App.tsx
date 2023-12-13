@@ -23,8 +23,20 @@ function App() {
   const [resultsType, setResultsType] = useState<ResultsType>(null);
 
   useEffect(() => {
+    /*
+     * TODO add the license key here.
+     * Please note: The Scanbot Web SDK will run without a license key for one minute per session!
+     * After the trial period has expired, all SDK functions and UI components will stop working.
+     * You can get a free "no-strings-attached" trial license.
+     * Please submit the trial license form (https://scanbot.io/trial/) on our website using
+     * "Web SDK" as the license type and a corresponding domain name of your test environment
+     * (e.g. myapp.example.com or www.mywebsite.com). Every trial license automatically
+     * includes "localhost" as a domain name for local development purposes.
+     */
+    const LICENSE_KEY = "";
+
     const scanbotOptions = {
-      licenseKey: "",
+      licenseKey: LICENSE_KEY,
     };
 
     let licenseTimeout: number;
